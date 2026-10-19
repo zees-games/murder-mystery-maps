@@ -236,7 +236,7 @@ class Map:
             self.span(fixed - thick / 2, fixed + thick / 2, y0, y1, p0, p1, mat, tint)
 
     def door(self, along, p0, p1, fixed, y0, y1, name="", hinge="start", into="+", motion=None,
-             secret=False, open=False, mat=None, tint=None, seconds=None, away=True, travel=None, angle=100.0,
+             secret=False, open=False, mat=None, tint=None, seconds=None, away=True, travel=None, angle=90.0,
              wall_mat="wood", wall_tint=None, wall_thick=WALL):
         """A door panel filling the hole from p0 to p1 (world, along the wall) and y0 to y1, in
         the wall along `along` at `fixed`.
@@ -1025,7 +1025,8 @@ def mansion():
     dark = (0.5, 0.36, 0.28)
     red = (0.62, 0.3, 0.3)
     stairwell = (3.0, -2.0, 5.9, 8.0)
-    back_hole = (14.3, -11.6, 16.3, -5.1)
+    # A door's width off the servants' stair door in the west wall, so it opens onto a landing, not a step.
+    back_hole = (15.5, -11.6, 17.5, -5.1)
     cellar = (-19.5, -11.5, -12.0, -5.0)
 
     # The grounds, with the cellar's hole under them.
@@ -1079,8 +1080,8 @@ def mansion():
     flight(m, 3.0, 5.9, -2.0, 8.0, 0.0, UP, "n", "wood", dark)
     railing(m, 3.0, -2.0, 3.0, 8.0, UP, mat="wood", tint=dark)
     railing(m, 3.0, 8.0, 5.9, 8.0, UP, mat="wood", tint=dark)
-    flight(m, 14.3, 16.3, -11.6, -5.1, 0.0, UP, "n", "wood", (0.55, 0.45, 0.35))
-    railing(m, 16.3, -10.6, 16.3, -5.1, UP, mat="wood", tint=dark)
+    flight(m, 15.5, 17.5, -11.6, -5.1, 0.0, UP, "n", "wood", (0.55, 0.45, 0.35))
+    railing(m, 17.5, -10.6, 17.5, -5.1, UP, mat="wood", tint=dark)
 
     # --- The cellar: a stone room under the kitchen, one stair down ---
     m.floor(-19.5, -11.5, -12.0, -5.0, "concrete", (0.6, 0.6, 0.6), y=-3.0)
@@ -1191,7 +1192,6 @@ def mansion():
     # Servants' corridor: sparse, so a person in it is seen from both ends.
     m.prop("furniture_coat_rack_standing", -6.0, -4.4)
     m.against("furniture_side_table", "n", -4.9, 5.5)
-    m.prop("furniture_potted_plant", 19.2, -4.4)
     m.against("furniture_bench", "n", -4.9, 14.2)
 
     # Back stair room.
@@ -1268,7 +1268,7 @@ def mansion():
     # Corridor.
     m.against("furniture_side_table", "n", -4.9, 8.0, y=UP)
     m.against("furniture_bench", "n", -4.9, 14.2, y=UP)
-    m.prop("furniture_potted_plant", -7.3, -4.5, y=UP)
+    m.prop("furniture_potted_plant", -5.5, -2.5, y=UP)
 
     # --- The grounds ---
     # Terrace and shed.
@@ -1290,7 +1290,7 @@ def mansion():
     m.against("furniture_cardboard_box_open", "w", 9.1, -17.4)
     m.against("furniture_cardboard_box_closed", "e", 13.9, -16.0)
     m.prop("nature_log_stack", 12.3, -18.0)
-    m.prop("nature_pot_large", 10.4, -15.9)
+    m.prop("nature_pot_large", 10.2, -18.2)
     # The hedge pocket: a U of hedge open to the south, with benches.
     m.span(-18.0, -6.0, 0.0, 1.9, -17.5, -16.5, "hedge", (0.6, 0.85, 0.6))
     m.span(-18.0, -17.0, 0.0, 1.9, -16.5, -13.0, "hedge", (0.6, 0.85, 0.6))
@@ -1306,7 +1306,8 @@ def mansion():
     m.span(12.0, 22.0, 0.0, 1.5, 15.5, 16.3, "hedge", (0.6, 0.85, 0.6))
     for x, z in ((-23, 0), (-23, 8), (-23, -6), (23, 0), (23, -8), (23, 8), (-15, 12), (16, 14)):
         m.prop("nature_tree_oak" if (x + z) % 2 else "nature_tree_detailed", x, z, (x * 7 + z * 13) % 360)
-    for x in (-18, -13, -8, 8, 13, 18):
+    # Not at 13: the terrace door swings out over it.
+    for x in (-18, -13, -8, 8, 18):
         m.prop("nature_plant_bush", x, 10.9)
     tree_ring(m, -24.0, -19.0, 24.0, 19.0, 6.0, ["nature_tree_tall", "nature_tree_oak", "nature_tree_default", "nature_tree_fat"], 5)
     # The ring is a plain row of trees: keep it off the shed and the paths.
@@ -1409,7 +1410,7 @@ def motel_room(m, fr):
     fr.prop("furniture_chair_desk", 3.2, 3.7, 90.0)
     tv = fr.wall_prop("furniture_cabinet_television_doors", "lo", 4.4)
     m.on("furniture_television_modern", tv, yaw=tv.get("yaw", 0.0))
-    fr.prop("furniture_lounge_chair", 1.7, 3.9, -90.0)
+    fr.prop("furniture_lounge_chair", 0.6, 4.7, -90.0)
     fr.prop("furniture_rug_doormat", 2.5, fr.V - 0.7)
     fr.prop("furniture_potted_plant", fr.U - 0.5, fr.V - 0.6)
     fr.prop("furniture_trashcan", 4.5, 5.2)
@@ -1507,7 +1508,8 @@ def motel():
     for a, b, c, d in ((1.7, 10.3, -4.3, -4.0), (1.7, 10.3, 4.0, 4.3), (1.7, 2.0, -4.0, 4.0), (10.0, 10.3, -4.0, 4.0)):
         m.span(a, b, 0.0, 0.25, c, d, "stone", (0.85, 0.85, 0.8))
     fence(m, 0.5, -5.5, 11.5, 5.5, height=1.2, mat="metal", tint=(0.7, 0.72, 0.75),
-          gaps=[("w", 4.5, 6.5), ("e", 4.5, 6.5), ("n", 5.0, 7.0), ("s", 5.0, 7.0)], gate={"name": "pool gate"})
+          # One metre gates: a wider leaf swings into the pool's coping, 1.2 m inside the fence.
+          gaps=[("w", 5.0, 6.0), ("e", 7.0, 8.0), ("n", 5.5, 6.5), ("s", 5.5, 6.5)], gate={"name": "pool gate"})
     for z in (-3.0, 0.0, 3.0):
         m.prop("furniture_bench_cushion_low", 11.0, z, -90.0)
     m.prop("nature_plant_bush_small", 1.2, -5.0)
@@ -1521,7 +1523,7 @@ def motel():
     for x0, z0, x1, z1 in ((-14, -10, 14, -8), (-14, -8, -12, 0), (12, -8, 14, 0)):
         m.floor(x0, z0, x1, z1, "concrete", (0.8, 0.78, 0.74))
         m.ceiling(x0, z0, x1, z1, 2.8, "ceiling", None, "roof", (0.4, 0.3, 0.28), 0.1)
-    post_row(m, -13.0, -8.1, 13.0, -8.1, 4.0)
+    post_row(m, -12.0, -8.1, 12.0, -8.1, 4.0)
     post_row(m, -12.1, -4.0, -12.1, 0.0, 2.0)
     post_row(m, 12.1, -4.0, 12.1, 0.0, 2.0)
     for x in (-10.0, -2.0, 6.0, 12.0):
@@ -1587,7 +1589,7 @@ def motel():
     office.prop("furniture_coat_rack_standing", 0.7, 5.0)
     radio_table = office.wall_prop("furniture_side_table", "hi", 4.5)
     m.on("furniture_radio", radio_table, yaw=radio_table.get("yaw", 0.0))
-    office.prop("furniture_lounge_sofa", 1.4, 4.3, 90.0)
+    office.prop("furniture_lounge_sofa", 1.4, 5.0, 90.0)
     office.prop("furniture_rug_doormat", 4.0, 5.3)
     office.prop("furniture_potted_plant", 7.4, 5.4)
 
@@ -1608,6 +1610,9 @@ def motel():
     for i in range(5):
         diner.prop("furniture_stool_bar", 3.0 + i, 4.9, 0.0)
     for i in range(4):
+        # Not the second booth: the back door opens over it, whichever way it is pushed.
+        if i == 1:
+            continue
         diner.wall_prop("furniture_bench_cushion", "back", 2.4 + i * 2.4)
         diner.prop("furniture_table", 2.4 + i * 2.4, 1.6, 90.0)
         diner.prop("furniture_chair", 2.4 + i * 2.4, 2.5, 180.0)
@@ -1615,7 +1620,7 @@ def motel():
         diner.prop("furniture_table", u, 6.6)
         diner.prop("furniture_chair_cushion", u - 0.5, 6.0, 180.0 + 0.0)
         diner.prop("furniture_chair_cushion", u + 0.5, 7.2, 0.0)
-    diner.prop("furniture_speaker", 0.5, 4.0)
+    diner.prop("furniture_speaker", 0.5, 5.6)
     diner.prop("furniture_potted_plant", 11.6, 7.4)
     diner.prop("furniture_rug_doormat", 8.0, 7.3)
     kitchen_row(m, 14.2, 19.8, 8.15, "n")
