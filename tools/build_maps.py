@@ -1738,7 +1738,10 @@ def open_yard():
     )
     H = 3.2
     X0, X1, Z0, Z1 = -34.0, 34.0, -34.0, 34.0
-    m.floor(X0, Z0, X1, Z1, "grass", (0.62, 0.8, 0.58), y=GROUND)
+    # The pool is sunk into the ground, so the grass leaves a hole for it (below).
+    px0, px1, pz0, pz1 = -24.0, -8.0, 2.0, 16.0
+    DEEP = -1.8     # the pool floor: deeper than a person's chest, with stairs out at three places
+    m.floor_around(X0, Z0, X1, Z1, (px0, pz0, px1, pz1), "grass", (0.62, 0.8, 0.58), y=GROUND)
     boundary(m, X0, Z0, X1, Z1, height=3.0, mat="brick", tint=(0.72, 0.66, 0.6))
 
     # Paths of paving between the buildings.
@@ -1853,13 +1856,26 @@ def open_yard():
         m.lamp_panel(xl, bc, BH)
         m.light(xl, BH - 0.5, bc, rng=9.0, energy=1.0, colour=WARM)
 
-    # --- The pool: sunk water you can wade across, a coping of stone, a lifeguard platform. ---
-    px0, px1, pz0, pz1 = -24.0, -8.0, 2.0, 16.0
-    m.overlay(px0, pz0, px1, pz1, "water")
+    # --- The pool: a real basin, 1.8 m deep, tiled, with water in it and stairs out at both ends. ---
+    # The ground leaves a hole (above); its floor and four walls are tile, and the water is a
+    # drawn skin 0.35 m under the coping, solid to nothing: a person wades in from a step, drops
+    # to the bottom and climbs out by the stairs (rise 0.22, as everywhere).
+    m.span(px0, px1, DEEP - 0.3, DEEP, pz0, pz1, "tile_small", (0.55, 0.8, 0.92))
+    for a, b, c, d in ((px0 - 0.3, px0, pz0 - 0.3, pz1 + 0.3), (px1, px1 + 0.3, pz0 - 0.3, pz1 + 0.3),
+                       (px0, px1, pz0 - 0.3, pz0), (px0, px1, pz1, pz1 + 0.3)):
+        m.span(a, b, DEEP - 0.3, GROUND, c, d, "tile_small", (0.78, 0.9, 0.96))
+    # Lane lines on the floor, then the water over everything.
+    for zl in (pz0 + 3.5, pz0 + 7.0, pz0 + 10.5):
+        m.overlay(px0 + 1.0, zl - 0.08, px1 - 1.0, zl + 0.08, "line", (0.2, 0.3, 0.6), y=DEEP)
+    m.overlay(px0, pz0, px1, pz1, "water", y=-0.35)
+    m.light((px0 + px1) / 2, -0.9, (pz0 + pz1) / 2, rng=12.0, energy=0.9, colour=(0.45, 0.85, 1.0))
+    # Stairs out: two on the south edge, one on the north.
+    for xa in (px0 + 1.5, px1 - 3.5):
+        flight(m, xa, xa + 2.0, pz0 + 0.0, pz0 + 4.4, DEEP, 0.0, "n", "tile_small", (0.78, 0.9, 0.96))
+    flight(m, -17.0, -15.0, pz1 - 4.4, pz1, DEEP, 0.0, "s", "tile_small", (0.78, 0.9, 0.96))
     for a, b, c, d in ((px0 - 0.4, px1 + 0.4, pz0 - 0.4, pz0), (px0 - 0.4, px1 + 0.4, pz1, pz1 + 0.4),
                        (px0 - 0.4, px0, pz0, pz1), (px1, px1 + 0.4, pz0, pz1)):
         m.span(a, b, 0.0, 0.3, c, d, "stone", (0.88, 0.88, 0.84))
-    m.span(px0 + 5.0, px0 + 8.0, 0.0, 1.3, pz1 - 0.2, pz1 + 0.0, "stone", (0.8, 0.8, 0.78)) if False else None
     # The platform on the north edge: a deck with a flight of stairs up to it.
     m.span(-16.0, -13.0, 0.0, 1.6, 0.0, 1.6, "wood", (0.7, 0.55, 0.4)) if False else None
     m.span(-17.0, -14.0, 1.2, 1.4, 17.0, 20.0, "wood", (0.75, 0.6, 0.45))
@@ -1892,6 +1908,68 @@ def open_yard():
         m.prop("furniture_bench", x + 1.6, z, -90.0)
     for x, z in ((-8.0, -8.0), (-1.0, 24.0), (9.0, -9.0), (26.0, 22.0), (-28.0, 22.0), (31.0, 31.0), (-31.0, -31.0)):
         lamp_pole(m, x, z)
+
+    # --- More to hide behind and walk past: a picnic ground, loungers, planting, bins, wood piles. ---
+    # A picnic ground between the hall and the tower, with a ring of log seats round a fire.
+    for xc, zc_, yaw in ((-4.5, -20.0, 90.0), (4.5, -15.0, 90.0)):
+        m.prop("furniture_table", xc, zc_, yaw)
+        m.prop("furniture_bench", xc, zc_ - 1.1, 0.0)
+        m.prop("furniture_bench", xc, zc_ + 1.1, 180.0)
+    m.prop("nature_campfire_logs", 0.0, -26.0)
+    for i in range(5):
+        ang = math.radians(72 * i + 20)
+        m.prop("nature_stump_round" if i % 2 else "nature_log", 2.3 * math.cos(ang), -26.0 + 2.3 * math.sin(ang), 72 * i)
+    for x, z in ((-6.5, -30.0), (6.0, -31.0), (-4.0, -12.5), (5.0, -12.5)):
+        m.prop("nature_log_stack" if x > 0 else "nature_stump_old", x, z, x * 17 % 360)
+    # Flower beds by the path ends and doors.
+    for i, (x, z) in enumerate(((-8.5, -8.0), (-7.0, -8.6), (7.0, -8.0), (8.5, -8.6), (-2.6, 30.0), (2.6, 30.0), (-2.6, 32.0), (2.6, 32.0))):
+        m.prop(("nature_flower_red_a", "nature_flower_yellow_a", "nature_flower_purple_a")[i % 3], x, z, i * 31 % 360)
+    # The pool deck: loungers and a table with stools on the east side, loungers on the west.
+    for z in (4.5, 8.0, 11.5, 14.5):
+        m.prop("furniture_lounge_chair_relax", px1 + 1.6, z, -90.0)
+    for z in (4.5, 8.0, 11.5):
+        m.prop("furniture_lounge_chair_relax", px0 - 1.6, z, 90.0)
+    m.prop("furniture_table_round", -16.0, 18.5)
+    m.prop("furniture_stool_bar", -17.2, 18.5)
+    m.prop("furniture_stool_bar", -14.8, 18.5)
+    for x, z in ((px0 - 1.0, pz1 + 1.4), (px1 + 1.0, pz1 + 1.4), (px1 + 1.0, pz0 - 1.2)):
+        m.prop("furniture_potted_plant", x, z)
+    # West strip: a hedge-like row of bushes, benches, bins.
+    for z in (6.0, 12.0, 18.0, 29.0, 33.0):
+        m.prop("nature_plant_bush_large", -32.6, z, z * 11 % 360)
+    for z in (9.0, 16.0):
+        m.prop("furniture_bench", -30.0, z, 90.0)
+    for x, z in ((-7.0, 20.5), (7.0, -4.0), (11.0, 5.0), (11.0, 11.0), (-28.0, 24.0), (24.0, 17.0)):
+        m.prop("furniture_trashcan", x, z)
+    # Along the block's north wall (its windows are at x 15, 19, 23, 27): bushes under them.
+    for x in (13.5, 17.0, 21.0, 25.0, 28.5):
+        m.prop("nature_plant_bush_small", x, 0.9, x * 13 % 360)
+    # The south-east corner of the yard: a wood pile, rocks and pines.
+    for x, z, k in ((30.0, 22.0, "nature_log_stack"), (28.0, 30.0, "nature_log_large"), (32.0, 27.0, "nature_stump_old"),
+                    (26.0, 31.0, "nature_rock_tall_a"), (18.0, 22.5, "nature_stone_large_a"), (12.0, 24.0, "nature_stone_small_a")):
+        m.prop(k, x, z, x * 7 % 360)
+    for i, (x, z) in enumerate(((24.0, 29.5), (33.0, 10.0), (-33.0, 24.0), (33.0, -26.0), (-33.0, -2.0), (14.0, -10.0))):
+        m.prop(("nature_tree_pine_tall_a", "nature_tree_pine_round_a")[i % 2], x, z, i * 53 % 360)
+    # The hall: a rug under the tables, a coat rack and plants at the doors, lamps in the corners.
+    m.prop("furniture_rug_rectangle", -19.0, -16.0, 90.0)
+    m.prop("furniture_coat_rack_standing", -9.4, -13.0)
+    m.prop("furniture_coat_rack_standing", -9.4, -19.0)
+    for x, z in ((-29.4, -13.0), (-29.4, -18.5), (-8.7, -13.0)):
+        m.prop("furniture_potted_plant", x, z)
+    for x, z in ((-29.3, -12.9), (-9.3, -20.6)):
+        m.prop("furniture_lamp_round_floor", x, z)
+    # The four rooms along the back: a side table and a lamp each.
+    for (a, b), kind in zip(zip(rx, rx[1:]), ("desk", "sofa", "table", "bed")):
+        xm = (a + b) / 2
+        if kind == "sofa":
+            m.on("furniture_lamp_round_table", m.prop("furniture_side_table", xm + 1.7, -29.2))
+        elif kind == "bed":
+            m.prop("furniture_lamp_round_floor", xm - 1.6, -21.0)
+        elif kind == "desk":
+            m.prop("furniture_bookcase_open", xm - 1.5, -29.4)
+    # The block's corridor ends: a bench and a plant at each.
+    for x in (bx0 + 0.9, bx1 - 0.9):
+        m.prop("furniture_potted_plant", x, bc + 0.95)
 
     # --- Spawns: apart, over the yard, the hall and its rooms, the tower floors, the block. ---
     for x, z, y in ((-27.0, -26.0, 0.0), (-16.0, -26.0, 0.0), (-10.0, -16.0, 0.0), (-26.0, -14.0, 0.0), (-17.0, -14.0, 0.0),

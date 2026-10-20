@@ -9,7 +9,7 @@ Every map is a **JSON document**, not a scene. A server reads the documents in i
 | `mm_mansion` (Blackwood Mansion) | Two storeys and a cellar: an entrance hall with a staircase, a dining room with a long table, a library, a kitchen and a servants' corridor that loops back to the hall, a back stair, bedrooms and a bathroom upstairs, and a garden with a hedge and a shed |
 | `mm_motel` (Lonely Pines Motel) | Eight small rooms along a covered walkway in a U round a car park and a pool, an office, a diner with its kitchen, a laundry, a boiler room and a storage shed, and a back alley behind the rooms that joins both ends |
 | `mm_silence_hollow` (Hollow Hill) | A small town of narrow rooms on three levels, a flooded cellar and several ways round; converted from a community map, see below |
-| `mm_factory_winter` (Factory Winter) | A snowed-in village's meat factory: a maze of work rooms, offices and cold stores on several levels; converted from a community map, see below. The village yards outside are not in it yet |
+| `mm_factory_winter` (Factory Winter) | A snowed-in village's meat factory: a maze of work rooms, offices and cold stores on several levels; converted from a community map, see below. The snowed village yards are in it, with 17 doors hung |
 | `mm_open_yard` (Open Yard) | An original, hand-built map: a big grass yard with a long hall and four rooms, a three-storey office tower, a flat-roofed office block and a pool. Made in the spirit of the sandbox starter yards shooters ship; no open remake whose terms allow porting was found, so none of any existing map's geometry is used |
 
 ## Converted maps and credits
@@ -22,6 +22,8 @@ These take the **layout** of a community map (walls, floors, stairs, doors, wher
 | `mm_factory_winter` | [Workshop item 3389912671](https://steamcommunity.com/sharedfiles/filedetails/?id=3389912671), a winter reworking of an abandoned mod's location for murder-style modes | FoKa (redesign); the original location is by Black Widow Games | none stated; the page does not forbid porting or sharing |
 
 Converted with `tools/import_bsp.py` (reads through dot-map's `tools/bsp`, cloned beside this repository or at `$DOTBSP_PATH`): `import_bsp.py mu_silence.bsp mm_silence_hollow "Hollow Hill" "Danny Judas" <url> --dusk --widen-doors --cover=18 --skip-door=9.58,0.0 --skip-door=24.54,-5.51`. The file is written once and kept; `build_maps.py` lists it in `IMPORTED` and `--check` only requires that it exists.
+
+Factory Winter was converted the same way, with the snowed ground and the doors that the map hangs: `import_bsp.py <bsp> mm_factory_winter "Factory Winter" FoKa <url> --dusk --max-lights=128 --skip-start=22 --terrain=snow --drop-beside=15.18,0.15,furniture_television_vintage --drop-beside=-3.34,0.31,furniture_books --drop-beside=-34.25,6.42,furniture_lounge_sofa` plus `--one-way=x,z` for the six doors that swing one way (-35.721,7.048; 5.179,-8.153; -38.148,3.315; -27.411,7.048; -31.366,3.315; -46.72,15.735) and `--skip-door=x,z` for the five that stay open (-3.658,3.796; -29.718,17.288; 14.44,2.315; -43.091,14.602; -46.835,21.793). The importer cuts every brush with dot-map's `boxes.decompose`, so wedges are wedges.
 
 ## How they are made
 

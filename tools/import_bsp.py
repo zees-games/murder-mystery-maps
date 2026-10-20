@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Converts a Source 1 community .bsp (VBSP 19/20) into a murder_map document.
 
-    tools/import_bsp.py <map.bsp> <id> "<Name>" <author> <page-url> [--out=maps/<id>.json] [--style=yard] [--field=round_seconds=300] [--drop-beside=x,z,kind] [--clear=x0,z0,x1,z1] [--prune-pockets] [--widen-doors] [--no-doors] [--slide-doors] [--terrain] [--dusk] [--skip-start=N] [--skip-door=x,z] [--cover=N] [--cover-gap=m] [--blurb=text] [--drop-kind=id] [--thin=id:N]
+    tools/import_bsp.py <map.bsp> <id> "<Name>" <author> <page-url> [--out=maps/<id>.json] [--style=yard] [--field=round_seconds=300] [--drop-beside=x,z,kind] [--clear=x0,z0,x1,z1] [--prune-pockets] [--widen-doors] [--no-doors] [--slide-doors] [--terrain[=material]] [--dusk] [--skip-start=N] [--skip-door=x,z] [--one-way=x,z] [--cover=N] [--cover-gap=m] [--blurb=text] [--drop-kind=id] [--thin=id:N]
 
 Adapted from hide-n-seek-maps' importer (copied, not linked): one spawn group, `players`, from the author's starts plus the clearest open floor up to 24.
 
@@ -55,6 +55,7 @@ import build_maps  # noqa: E402
 
 S = 0.01905
 SKIP_STARTS = set()   # --skip-start=N: the author's Nth start, which the build says is inside a box
+ONE_WAY = []   # --one-way=x,z (a door's finished centre): pinned to swing one way, for a door the swing check refuses the other way
 SKIP_DOORS = []   # --skip-door=x,z (finished coordinates): a doorway left open, for a door the game's swing check refuses
 
 # This game's catalogue has no food_* or survival_*: a person hides, not a bottle. "" drops.
@@ -64,6 +65,7 @@ HS_SWAP = {
     "food_carton_small": "", "food_soda_can": "", "survival_box_large": "furniture_cardboard_box_closed",
     "food_mug": "", "food_cup_coffee": "", "survival_chest": "furniture_cardboard_box_closed", "food_banana": "", "food_pot": "",
 }
+NOT_DOORS = ("lockerdoor", "door_oven")   # func_door_rotating targetnames that are a leaf of furniture, not a doorway (an unnamed one is a cabinet's)
 SLAB = 28.0     # source units: ~0.53 m, a slope's riser
 
 TOOLS = ("TOOLS/", "tools/")
@@ -269,6 +271,35 @@ PROP_MAP = {
     "wood_pallet_debris_06": "survival_box",
     "wood_pallet_debris_11": "survival_box",
     "wood_pallet_debris_12": "survival_box",
+    # A winter meat factory (mm_factory_winter): shelves, offices, a cold-store's crates and a laundry.
+    "furnitureshelf001b": "furniture_bookcase_open",
+    "furniturecupboard001a": "furniture_bookcase_closed",
+    "furniturecouch002a": "furniture_lounge_sofa",
+    "tableantique": "furniture_table",
+    "prison_bedframe001b": "furniture_bed_single",
+    "furniture_chair03a": "furniture_chair",
+    "controlroom_desk001b": "furniture_desk",
+    "controlroom_chair001a": "furniture_chair_desk",
+    "chair_office01a": "furniture_chair_desk",
+    "controlroom_filecabinet002a": "furniture_side_table_drawers",
+    "filecabinet02": "furniture_side_table_drawers",
+    "lockers001a": "furniture_bookcase_closed_doors",
+    "monitor02": "furniture_computer_screen",
+    "harddrive02": "furniture_speaker_small",
+    "dryer": "furniture_dryer",
+    "laundry_cart002": "survival_box_large",
+    "woodbarrel001": "survival_barrel",
+    "cinderblock01a": "nature_stone_small_a",
+    "wood_pallet001a": "survival_box",
+    "crates_fruit1": "survival_box_large",
+    "partsbin01": "survival_box",
+    "pumpkin01": "nature_crop_pumpkin",
+    "terracotta01": "nature_pot_small",
+    "christmas_gift_box_3": "furniture_cardboard_box_closed",
+    "cardboard_box002a": "furniture_cardboard_box_closed",
+    "wall_lamp2": "furniture_lamp_wall",
+    "desk_lamp01": "furniture_lamp_square_table",
+    "ceiling_fan_blade": "furniture_ceiling_fan",
 }
 
 
@@ -303,122 +334,14 @@ def planes_of(bsp, index):
     return [bsp.planes[s[0]][:4] for s in bsp.brushsides[first:first + count] if not s[3]]
 
 
-def z_range(planes, x, y):
-    lo, hi = -1e9, 1e9
-    for nx, ny, nz, d in planes:
-        if abs(nz) < 1e-6:
-            continue
-        z = (d - nx * x - ny * y) / nz
-        if nz > 0:
-            hi = min(hi, z)
-        else:
-            lo = max(lo, z)
-    return lo, hi
-
-
-def box_in_frame(pts, phi, tol):
-    """The hull's extents in a frame turned phi degrees about z, or None when some corner is not
-    a corner of that bounding box. (x0, x1), (y0, y1), (z0, z1), in the turned frame."""
-    c, sn = math.cos(math.radians(phi)), math.sin(math.radians(phi))
-    q = [(p[0] * c + p[1] * sn, -p[0] * sn + p[1] * c, p[2]) for p in pts]
-    x0, x1 = min(p[0] for p in q), max(p[0] for p in q)
-    y0, y1 = min(p[1] for p in q), max(p[1] for p in q)
-    z0, z1 = min(p[2] for p in q), max(p[2] for p in q)
-    for p in q:
-        if not ((abs(p[0] - x0) < tol or abs(p[0] - x1) < tol) and (abs(p[1] - y0) < tol or abs(p[1] - y1) < tol)
-                and (abs(p[2] - z0) < tol or abs(p[2] - z1) < tol)):
-            return None
-    return (x0, x1), (y0, y1), (z0, z1)
-
-
-def turned_box(bsp, index, pts):
-    """(box, phi) when the brush is a box turned about the vertical axis, else None. The author's
-    building is not always on the grid (a room at thirty degrees to the rest), and cutting such a
-    wall into axis-aligned slabs gives a saw-tooth the players catch on. The angle is each upright
-    side's direction modulo 90, tried in turn; the document's boxes carry a yaw."""
-    first, count, _ = bsp.brushes[index]
-    tried = set()
-    for sd in bsp.brushsides[first:first + count]:
-        if sd[3]:
-            continue
-        nx, ny, nz, _d = bsp.planes[sd[0]][:4]
-        if abs(nz) > 1e-4:
-            continue
-        phi = round(math.degrees(math.atan2(ny, nx)) % 90.0, 2)
-        if phi in tried or phi < 0.05 or phi > 89.95:
-            continue
-        tried.add(phi)
-        # Four-decimal planes at 1000 units leave a unit of slack in the corners.
-        box = box_in_frame(pts, phi, 1.5)
-        if box is not None:
-            return box, phi
-    return None
-
-
-def prism_box(pts):
-    """(box, phi) for a brush that is a vertical prism of any plan shape: the smallest turned
-    rectangle round its plan. A curved wall is a run of such wedges and a column of a round room
-    is one; the box overhangs the wedge by a sliver, where cutting it into axis-aligned slabs (a
-    slope's treatment, wrong for a plan shape) bit chunks out of the room. None for a brush whose
-    top or bottom is not flat and level."""
-    zs = sorted({round(p[2], 1) for p in pts})
-    if len(zs) != 2:
-        return None
-    low = {(round(p[0], 1), round(p[1], 1)) for p in pts if abs(p[2] - zs[0]) < 0.15}
-    high = {(round(p[0], 1), round(p[1], 1)) for p in pts if abs(p[2] - zs[1]) < 0.15}
-    if low != high or len(low) < 3:
-        return None
-    plan = [(x, y, zs[0]) for x, y in low]
-    best = None
-    for (ax, ay), (bx_, by) in ((p, q) for p in low for q in low if p != q):
-        phi = math.degrees(math.atan2(by - ay, bx_ - ax)) % 90.0
-        box = box_in_frame(plan, phi, 1e9)
-        area = (box[0][1] - box[0][0]) * (box[1][1] - box[1][0])
-        if best is None or area < best[0] - 1e-6:
-            best = (area, phi, box)
-    _a, phi, box = best
-    return (box[0], box[1], (zs[0], zs[1])), phi
-
-
 def brush_boxes(bsp, index):
-    """[((x range), (y range), (z range), phi)] in Source units, the ranges in a frame turned phi
-    degrees (0 for most), and whether the brush had to be cut into slabs."""
-    pts = bsp.brush_hull(index)
-    if len(pts) < 4:
-        return [], 0
-    x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts)
-    y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
-    z0, z1 = min(p[2] for p in pts), max(p[2] for p in pts)
-    box_vol = (x1 - x0) * (y1 - y0) * (z1 - z0)
-    # Hull volume from the corner points: a brush is a box when every corner is a box corner.
-    corners = sum(1 for p in pts if (abs(p[0] - x0) < 0.5 or abs(p[0] - x1) < 0.5) and (abs(p[1] - y0) < 0.5 or abs(p[1] - y1) < 0.5) and (abs(p[2] - z0) < 0.5 or abs(p[2] - z1) < 0.5))
-    if corners == len(pts):
-        return [((x0, x1), (y0, y1), (z0, z1), 0.0)], 0
-    tb = turned_box(bsp, index, pts)
-    if tb is not None:
-        return [tb[0] + (tb[1],)], 0
-    pb = prism_box(pts)
-    if pb is not None:
-        return [pb[0] + (pb[1],)], 0
-    pl = planes_of(bsp, index)
-    out = []
-    if x1 - x0 >= y1 - y0:
-        n = max(1, math.ceil((x1 - x0) / SLAB))
-        for i in range(n):
-            a, b = x0 + (x1 - x0) * i / n, x0 + (x1 - x0) * (i + 1) / n
-            lo, hi = z_range(pl, (a + b) / 2, (y0 + y1) / 2)
-            lo, hi = max(lo, z0), min(hi, z1)
-            if hi - lo > 0.5:
-                out.append(((a, b), (y0, y1), (lo, hi), 0.0))
-    else:
-        n = max(1, math.ceil((y1 - y0) / SLAB))
-        for i in range(n):
-            a, b = y0 + (y1 - y0) * i / n, y0 + (y1 - y0) * (i + 1) / n
-            lo, hi = z_range(pl, (x0 + x1) / 2, (a + b) / 2)
-            lo, hi = max(lo, z0), min(hi, z1)
-            if hi - lo > 0.5:
-                out.append(((x0, x1), (a, b), (lo, hi), 0.0))
-    return out, 1
+    """[((x range), (y range), (z range), phi)] in Source units for one brush, and whether it had to
+    be cut into slabs. dotbsp's decompose: a box, a box turned about the vertical, a prism's turned
+    bounding box, else slabs along the slope. (The local copy this replaces took a wedge for a box,
+    because a wedge's six corners are all box corners: a ramp came out as a block twice its height.)"""
+    out = dboxes.decompose(planes_of(bsp, index), bsp.brush_hull(index), slab=SLAB)
+    cut = any(b["kind"] not in ("box", "turned", "prism") for b in out)
+    return [(b["x"], b["y"], b["z"], b["phi"]) for b in out], int(cut)
 
 
 # Furniture a crouching person fits behind, for a map the author furnished too thinly to hide in
@@ -453,7 +376,7 @@ def main(argv):
     cover_seed = 7
     drop_kinds = []
     thin = {}
-    terrain = False
+    terrain = ""
     for a in argv[1:]:
         if a.startswith("--out="):
             out_path = a[6:]
@@ -463,6 +386,8 @@ def main(argv):
             cover_gap = float(a[12:])
         elif a.startswith("--skip-door="):
             SKIP_DOORS.append(tuple(float(t) for t in a[12:].split(",")))
+        elif a.startswith("--one-way="):
+            ONE_WAY.append(tuple(float(t) for t in a[10:].split(",")))
         elif a.startswith("--skip-start="):
             SKIP_STARTS.add(int(a[13:]))
         elif a.startswith("--max-lights="):
@@ -482,8 +407,8 @@ def main(argv):
             thin[k] = int(n)
         elif a == "--slide-doors":
             slide = True
-        elif a == "--terrain":
-            terrain = True
+        elif a == "--terrain" or a.startswith("--terrain="):
+            terrain = a[10:] or "grass"
         elif a == "--prune-pockets":
             pockets = True
         elif a.startswith("--style="):
@@ -551,8 +476,8 @@ def main(argv):
                 tris += bsp.displacement_tris(f)
         for c in dboxes.terrain_cells(tris):
             # terrain_cells names the axes as the map does (z is height); this loop's y is the height, z the map's y.
-            (x0, x1), (y0, y1), (z0, z1), mat = c["x"], c["z"], c["y"], "grass"
-            m.span(x0 * S, x1 * S, y0 * S, y1 * S, -z1 * S, -z0 * S, mat, (0.85, 0.9, 0.78))
+            (x0, x1), (y0, y1), (z0, z1) = c["x"], c["z"], c["y"]
+            m.span(x0 * S, x1 * S, y0 * S, y1 * S, -z1 * S, -z0 * S, terrain, (0.85, 0.9, 0.78) if terrain == "grass" else None)
             n += 1
         print("terrain: %d ground boxes from the displacements" % n)
     print("brushes %d  tool-only %d  sliced %d  boxes %d" % (len(bsp.model_brushes(0)), skipped, sliced, len(m.boxes)))
@@ -642,6 +567,7 @@ def main(argv):
             dropped["(over a hole)"] = dropped.get("(over a hole)", 0) + 1
             continue
         m.prop(pid, gx, gz, yaw=yaw, y=y)
+    author_y = []   # the floor each of the author's starts stands on, for the origin shift below
     starts = [e for e in bsp.entities if e.get("classname") in START_CLASSES]
     gstarts = [gd(vec(e["origin"])) for e in starts]
     ys = sorted((support(g[0], g[2], None, 0.0, g[1] + 0.6) or g[1] - 0.05) for g in gstarts)
@@ -664,6 +590,7 @@ def main(argv):
             print("start %d at (%.1f, %.1f, %.1f) has no floor under it: left out" % (i, gx, gy, gz))
             continue
         m.spawn(gx, gz, yaw=ang[1] - 90.0, y=floor + 0.05)
+        author_y.append(round(floor + 0.05, 2))
     have = [(sp["at"][0], sp["at"][2]) for sp in m.spawns["players"]]
     for size, x, z in m.spots(step=2.0, top=200):
         if len(m.spawns["players"]) >= 24:
@@ -683,10 +610,18 @@ def main(argv):
         # A flat on the author's first floor (ph_apartment): the play floor is a metre or so above
         # the world's zero, with the building's footing under it. Lower the whole map so the floor
         # the spawns stand on is y = 0, which is where the game, the audit and the bots expect it.
-        ys = sorted(sp["at"][1] for sp in doc["spawns"]["players"])
-        oy = round(ys[len(ys) // 2] - 0.05, 3)
-        ground = [b for b in doc["boxes"] if b.get("solid", True) and abs(b["at"][1] + b["size"][1] / 2 - oy) < 0.05
-                  and b["size"][0] > 4.0 and b["size"][2] > 4.0]
+        # The level is the author's own starts' (most of them first), never the median of every
+        # spawn: the clearest open floor the builder adds lands on a terrain yard, which moved the
+        # median off any floor with a slab under it and left the map unshifted (--terrain).
+        levels = sorted(set(author_y), key=lambda v: (-author_y.count(v), v))
+        median = sorted(sp["at"][1] for sp in doc["spawns"]["players"])
+        levels.append(median[len(median) // 2])
+        for lv in levels:
+            oy = round(lv - 0.05, 3)
+            ground = [b for b in doc["boxes"] if b.get("solid", True) and abs(b["at"][1] + b["size"][1] / 2 - oy) < 0.05
+                      and b["size"][0] > 4.0 and b["size"][2] > 4.0]
+            if ground:
+                break
     ox = oz = 0.0
     if ground:
         cx = sum(sp["at"][0] for sp in doc["spawns"]["players"]) / len(doc["spawns"]["players"])
@@ -726,6 +661,14 @@ def main(argv):
         if near and (near[0]["at"][0] - dx) ** 2 + (near[0]["at"][2] - dz) ** 2 <= 1.8 ** 2:
             doc["props"].remove(near[0])
             print("dropped %s at %s beside (%.1f, %.1f)" % (near[0]["id"], near[0]["at"], dx, dz))
+    # Layered models of the author's (a shelf drawn as three) land on one catalogue prop in one place.
+    stacked = []
+    for q in doc["props"]:
+        if not any(q["id"] == k["id"] and all(abs(q["at"][i] - k["at"][i]) < 0.05 for i in (0, 2)) and abs(q["at"][1] - k["at"][1]) < 0.1 for k in stacked):
+            stacked.append(q)
+    if len(stacked) != len(doc["props"]):
+        print("dropped %d props stacked on an identical one" % (len(doc["props"]) - len(stacked)))
+        doc["props"][:] = stacked
     seen = {}
     kept = []
     for q in doc["props"]:
@@ -740,7 +683,24 @@ def main(argv):
         print("dropped %d props by kind" % (len(doc["props"]) - len(kept)))
         doc["props"][:] = kept
     if not no_doors:
-        docboxes.add_doors(m, doc, bsp.entities, (ox, oy, oz), slide, scale=S, skip=SKIP_DOORS)
+        # add_doors hangs `prop_door_rotating` only, and this author's doors are brush entities with
+        # their hinge as the origin; they are shown to it as that class. A locker leaf or an oven door
+        # is not a doorway, and the ones that find no doorway are reported by add_doors.
+        hinged = [dict(e, classname="prop_door_rotating") for e in bsp.entities
+                  if e.get("classname") == "func_door_rotating" and e.get("targetname")
+                  and not str(e["targetname"]).lower().startswith(NOT_DOORS)]
+        docboxes.add_doors(m, doc, bsp.entities + hinged, (ox, oy, oz), slide, scale=S, skip=SKIP_DOORS)
+        # A double door is two entities whose hinges each find the whole doorway: one leaf across it is kept.
+        kept_d = []
+        for d in doc["doors"]:
+            if not any(abs(d["at"][0] - k["at"][0]) < 0.3 and abs(d["at"][1] - k["at"][1]) < 0.3 and abs(d["at"][2] - k["at"][2]) < 0.3 for k in kept_d):
+                kept_d.append(d)
+        if len(kept_d) != len(doc["doors"]):
+            print("doors: %d double-hung doorways kept as one leaf" % (len(doc["doors"]) - len(kept_d)))
+            doc["doors"][:] = kept_d
+        for d in doc["doors"]:
+            if any(abs(d["at"][0] - a) < 0.1 and abs(d["at"][2] - b) < 0.1 for a, b in ONE_WAY):
+                d["away"] = False
     if widen:
         print("widened %d doorways to 1.4 m" % docboxes.widen_doors(doc["boxes"], doors=doc["doors"]))
     out_path = out_path or os.path.join(build_maps.ROOT, "maps", mid + ".json")
