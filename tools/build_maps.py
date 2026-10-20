@@ -1683,7 +1683,7 @@ MAPS = {"mm_mansion": mansion, "mm_motel": motel}
 # Maps converted from community levels by tools/import_bsp.py (the command is in each map's README entry).
 # They are written once by the importer and kept, so the builder neither rewrites nor compares them;
 # --check only requires that each exists.
-IMPORTED = ["mm_silence_hollow"]
+IMPORTED = ["mm_silence_hollow", "mm_factory_winter"]
 
 
 def write_all(check):

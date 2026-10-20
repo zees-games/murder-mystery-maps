@@ -909,6 +909,7 @@ def main(argv):
     slide = False
     cover = 0
     dusk = False
+    max_lights = 128
     cover = 0
     cover_gap = 3.0
     blurb = ""
@@ -933,6 +934,8 @@ def main(argv):
             SKIP_DOORS.append(tuple(float(t) for t in a[12:].split(",")))
         elif a.startswith("--skip-start="):
             SKIP_STARTS.add(int(a[13:]))
+        elif a.startswith("--max-lights="):
+            max_lights = int(a[13:])
         elif a == "--dusk":
             dusk = True
         elif a.startswith("--blurb="):
@@ -1047,6 +1050,7 @@ def main(argv):
 
     dropped = {}
     placed = []
+    lights = []
     for e in bsp.entities:
         cls = e.get("classname")
         if cls in PROP_CLASSES:
@@ -1062,7 +1066,21 @@ def main(argv):
             o = vec(e["origin"])
             gx, gy, gz = gd(o)
             c = vec(e.get("_light", "255 255 255 200"))
-            m.light(gx, gy, gz, rng=9.0, energy=min(1.2, c[3] / 200.0), colour=[c[0] / 255, c[1] / 255, c[2] / 255])
+            lights.append((gx, gy, gz, min(1.2, c[3] / 200.0), [c[0] / 255, c[1] / 255, c[2] / 255]))
+    # A map documents at most 128 lights and a browser draws 8 a surface: keep the author's lights at least
+    # `gap` metres apart, widening the gap until they fit, each kept one a little stronger for those it stood for.
+    gap = 0.0
+    kept_l = lights
+    while len(kept_l) > max_lights:
+        gap += 0.5
+        kept_l = []
+        for l in lights:
+            if all((l[0] - k[0]) ** 2 + (l[1] - k[1]) ** 2 + (l[2] - k[2]) ** 2 >= gap * gap for k in kept_l):
+                kept_l.append(l)
+    for gx, gy, gz, en, col in kept_l:
+        m.light(gx, gy, gz, rng=9.0 + gap, energy=min(1.6, en * (1.0 + gap / 8.0)), colour=col)
+    if gap:
+        print("lights: %d of the author's %d kept, %.1f m apart" % (len(kept_l), len(lights), gap))
     def floor_corners_ok(x, z, pid, yaw, y):
         """A prop standing on the ground has solid floor under every corner of its footprint:
         the author's cellar stair is a hole in the floor, and a crate on its rim hung half over it."""
@@ -1112,7 +1130,10 @@ def main(argv):
         gx, gy, gz = gstarts[i]
         ang = vec(e.get("angles", "0 0 0"))
         floor = support(gx, gz, None, 0.0, gy + 0.6)
-        m.spawn(gx, gz, yaw=ang[1] - 90.0, y=(max(gy, 0.0) if floor is None else floor) + 0.05)
+        if floor is None:
+            print("start %d at (%.1f, %.1f, %.1f) has no floor under it: left out" % (i, gx, gy, gz))
+            continue
+        m.spawn(gx, gz, yaw=ang[1] - 90.0, y=floor + 0.05)
     have = [(sp["at"][0], sp["at"][2]) for sp in m.spawns["players"]]
     for size, x, z in m.spots(step=2.0, top=200):
         if len(m.spawns["players"]) >= 24:
@@ -1153,6 +1174,13 @@ def main(argv):
                     shift(v)
         for key in ("boxes", "props", "lights", "spawns", "toys", "doors"):
             shift(doc.get(key))
+    # A start far below the rest is another area of the author's (a pit, a sealed cellar the conversion has no floor for).
+    ysp = sorted(sp["at"][1] for sp in doc["spawns"]["players"])
+    low = [sp for sp in doc["spawns"]["players"] if sp["at"][1] < ysp[len(ysp) // 2] - 8.0]
+    for sp in low:
+        doc["spawns"]["players"].remove(sp)
+    if low:
+        print("left out %d starts more than 8 m below the rest" % len(low))
     if pockets:
         print("pruned %d props that left a pocket the bots cannot leave" % prune_pockets(doc))
     # Spots are found beside props, so taking the prop away takes the spot: for a place the

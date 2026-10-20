@@ -9,6 +9,7 @@ Every map is a **JSON document**, not a scene. A server reads the documents in i
 | `mm_mansion` (Blackwood Mansion) | Two storeys and a cellar: an entrance hall with a staircase, a dining room with a long table, a library, a kitchen and a servants' corridor that loops back to the hall, a back stair, bedrooms and a bathroom upstairs, and a garden with a hedge and a shed |
 | `mm_motel` (Lonely Pines Motel) | Eight small rooms along a covered walkway in a U round a car park and a pool, an office, a diner with its kitchen, a laundry, a boiler room and a storage shed, and a back alley behind the rooms that joins both ends |
 | `mm_silence_hollow` (Hollow Hill) | A small town of narrow rooms on three levels, a flooded cellar and several ways round; converted from a community map, see below |
+| `mm_factory_winter` (Factory Winter) | A snowed-in village's meat factory: a maze of work rooms, offices and cold stores on several levels; converted from a community map, see below. The village yards outside are not in it yet |
 
 ## Converted maps and credits
 
@@ -17,6 +18,7 @@ These take the **layout** of a community map (walls, floors, stairs, doors, wher
 | Map | Original | Author | Stated licence |
 | --- | --- | --- | --- |
 | `mm_silence_hollow` | [Workshop item 534296455](https://steamcommunity.com/sharedfiles/filedetails/?id=534296455), a small atmospheric map for murder-style modes | Danny Judas (textures and models by the Alchemilla team and Valve, none of which is used here) | none stated; the page does not forbid porting or sharing |
+| `mm_factory_winter` | [Workshop item 3389912671](https://steamcommunity.com/sharedfiles/filedetails/?id=3389912671), a winter reworking of an abandoned mod's location for murder-style modes | FoKa (redesign); the original location is by Black Widow Games | none stated; the page does not forbid porting or sharing |
 
 Converted with `tools/import_bsp.py` (reads through dot-map's `tools/bsp`, cloned beside this repository or at `$DOTBSP_PATH`): `import_bsp.py mu_silence.bsp mm_silence_hollow "Hollow Hill" "Danny Judas" <url> --dusk --widen-doors --cover=18 --skip-door=9.58,0.0 --skip-door=24.54,-5.51`. The file is written once and kept; `build_maps.py` lists it in `IMPORTED` and `--check` only requires that it exists.
 
