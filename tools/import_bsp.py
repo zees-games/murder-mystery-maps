@@ -33,6 +33,7 @@ The output goes through build_maps.Map.build(), so spawns are settled and checke
 import json
 import math
 import os
+import random
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -420,6 +421,230 @@ def hang_doorways(m, doc, log=print):
     log("doorways: %d hung" % hung)
     return hung
 
+# What stands against a wall by the kind of room, which is told by the floor's texture and the storey
+# (--dress-walls): a map's beds, shelves, cabinets and counters are not on open floor, so the open-floor
+# scatter (--dress) never reaches them. Ids are catalogue ids; the first match in FLOOR_KINDS wins.
+FLOOR_KINDS = [("MILFLR", "tile"), ("TILEFLOOR", "tile"), ("CONCRETEFLOOR", "concrete"), ("CARPET", "carpet"),
+               ("FLOOR02", "wood"), ("WOODFLOOR", "wood")]
+WALL_DRESS = {
+    "bedroom": ("furniture_bed_single", "furniture_bed_double", "furniture_cabinet_bed_drawer", "furniture_bookcase_closed_wide",
+                "furniture_side_table_drawers", "furniture_lamp_round_floor", "furniture_bookcase_closed", "furniture_bed_single"),
+    "lounge": ("furniture_lounge_sofa", "furniture_cabinet_television", "furniture_bookcase_closed_wide", "furniture_side_table",
+               "furniture_lamp_square_floor", "furniture_potted_plant", "furniture_bookcase_open", "furniture_coat_rack_standing"),
+    "kitchen": ("furniture_kitchen_cabinet_drawer", "furniture_kitchen_fridge", "furniture_kitchen_stove", "furniture_kitchen_sink",
+                "furniture_kitchen_cabinet", "furniture_washer", "furniture_dryer", "furniture_bathroom_cabinet_drawer"),
+    "store": ("furniture_cardboard_box_closed", "furniture_bookcase_open", "furniture_cabinet_bed_drawer", "furniture_washer",
+              "furniture_bench", "furniture_bookcase_open_low"),
+}
+# One of these per room at most (a second bed in a bedroom reads as a dormitory).
+ONE_PER_ROOM = ("furniture_bed_single", "furniture_bed_double", "furniture_kitchen_fridge", "furniture_kitchen_stove", "furniture_lounge_sofa",
+                "furniture_cabinet_television", "furniture_kitchen_sink", "furniture_lamp_round_floor", "furniture_lamp_square_floor")
+ROOM_SIZE = 4.5   # metres: two props of ONE_PER_ROOM nearer than this are taken to be in one room
+FRONT = 0.7       # metres kept clear in front of a wall piece: a person passes
+
+
+def floor_zones(bsp):
+    """The map's floors by texture: [(x0, x1, y, z0, z1, kind)] in the importer's coordinates before
+    the origin shift, from every upward horizontal face of 1.5 m2 or more whose texture FLOOR_KINDS knows."""
+    zones = []
+    for f in bsp.model_faces(0):
+        name, _flags = bsp.face_material(f)
+        up = name.upper().split("/")[-1]
+        kind = next((k for t, k in FLOOR_KINDS if up.startswith(t)), None)
+        pts = bsp.face_points(f)
+        if kind is None or len(pts) < 3 or f[1] != 0 or bsp.planes[f[0]][2] < 0.9:
+            continue
+        g = [gd(p) for p in pts]
+        if max(p[1] for p in g) - min(p[1] for p in g) > 0.01:
+            continue
+        x0, x1 = min(p[0] for p in g), max(p[0] for p in g)
+        z0, z1 = min(p[2] for p in g), max(p[2] for p in g)
+        if (x1 - x0) * (z1 - z0) >= 1.5:
+            zones.append((x0, x1, g[0][1], z0, z1, kind))
+    return zones
+
+
+def _roofed(m, x, y, z):
+    """Something solid over (x, z) between 2 m and 4 m above y: a room, not the yard or a pool."""
+    for b in m.boxes:
+        if b.get("solid", True) and docboxes.within(b, x, z):
+            bot = b["at"][1] - b["size"][1] / 2
+            if y + 2.0 <= bot <= y + 4.0:
+                return True
+    return False
+
+
+def dress_walls(m, zones, count, seed, log=print):
+    """Furniture with its back to a wall, in every roofed room (--dress-walls), after the doors are
+    hung: each candidate is a catalogue prop set against the inner face of a wall box with the whole
+    prop on one wall and on floor, nothing solid or standing in it, 0.7 m clear in front of it, no
+    low step-like box within 0.5 m (a stair's foot), and no door within 1.9 m of it (a swing and a
+    doorway). The kind of prop is the room's: its floor texture, and on an upper storey a wooden
+    floor is a bedroom. Seeded, so a rerun is the same."""
+    rng = random.Random(seed)
+    levels = sorted({round(z[2], 2) for z in zones})
+    placed_by = {}
+    # Every wall face at every level, as (side, face, lo, hi, level).
+    cands = []
+    for lv in levels:
+        for b in m.boxes:
+            if not b.get("solid", True) or b.get("yaw") or b.get("visible", True) is False:
+                continue
+            (bx, by, bz), (sx, sy, sz) = b["at"], b["size"]
+            if by - sy / 2 > lv + 0.5 or by + sy / 2 < lv + 1.8 or sy < 1.8:
+                continue
+            for side, face, lo, hi in (("n", bz + sz / 2, bx - sx / 2, bx + sx / 2), ("s", bz - sz / 2, bx - sx / 2, bx + sx / 2),
+                                       ("w", bx + sx / 2, bz - sz / 2, bz + sz / 2), ("e", bx - sx / 2, bz - sz / 2, bz + sz / 2)):
+                if hi - lo >= 0.8:
+                    cands.append((side, face, lo, hi, lv))
+    cands = cands * 8   # a wall is tried at several places along it and with several props
+    rng.shuffle(cands)
+    storeys = [lv for lv in levels if any(_roofed(m, (z[0] + z[1]) / 2, z[2], (z[3] + z[4]) / 2) for z in zones if round(z[2], 2) == lv)]
+    placed = []
+    per_level = {lv: 0 for lv in storeys}
+    quota = max(2, count // max(1, len(storeys)))
+    taken = 0
+    for pass_quota in (quota, quota * 2, count):
+        for side, face, lo, hi, lv in cands:
+            if taken >= count:
+                break
+            if lv not in per_level or per_level[lv] >= pass_quota:
+                continue
+            along = rng.uniform(lo + 0.6, hi - 0.6) if hi - lo > 1.2 else (lo + hi) / 2
+            sign = {"n": 1, "w": 1, "s": -1, "e": -1}[side]
+            probe = (along, face + sign * 0.5) if side in "ns" else (face + sign * 0.5, along)
+            px, pz = (probe[0], probe[1]) if side in "ns" else (probe[0], probe[1])
+            if not _roofed(m, px, lv, pz):
+                continue
+            zone = next((z for z in zones if z[0] <= px <= z[1] and z[3] <= pz <= z[4] and abs(z[2] - lv) < 0.1), None)
+            kind = zone[5] if zone else "wood"
+            room = {"tile": "kitchen", "concrete": "store"}.get(kind) or ("bedroom" if lv >= 2.0 else "lounge")
+            pid = rng.choice(WALL_DRESS[room])
+            w, d = build_maps.footprint(pid, {"n": 0.0, "s": 180.0, "w": 90.0, "e": -90.0}[side])
+            # The prop's rectangle and the clear strip in front of it.
+            if side in "ns":
+                x0, x1 = along - w / 2, along + w / 2
+                z0, z1 = (face, face + d) if side == "n" else (face - d, face)
+                fx0, fx1 = x0, x1
+                fz0, fz1 = (z1, z1 + FRONT) if side == "n" else (z0 - FRONT, z0)
+                if x0 < lo + 0.05 or x1 > hi - 0.05:
+                    continue
+            else:
+                z0, z1 = along - d / 2, along + d / 2
+                x0, x1 = (face, face + w) if side == "w" else (face - w, face)
+                fz0, fz1 = z0, z1
+                fx0, fx1 = (x1, x1 + FRONT) if side == "w" else (x0 - FRONT, x0)
+                if z0 < lo + 0.05 or z1 > hi - 0.05:
+                    continue
+            _, sy_, _ = build_maps.size_of(pid)
+            if not _rect_clear(m, x0 + 0.06, x1 - 0.06, z0 + 0.06, z1 - 0.06, lv, 0.1, 1.9) or not _rect_clear(m, fx0, fx1, fz0, fz1, lv, 0.1, 1.9):
+                continue
+            if not _rect_floored(m, x0, x1, z0, z1, lv) or not _rect_floored(m, fx0, fx1, fz0, fz1, lv):
+                continue
+            # A stair's foot: a step-like box rising 5 to 75 cm above this floor within 0.5 m.
+            if not _rect_clear(m, x0 - 0.5, x1 + 0.5, z0 - 0.5, z1 + 0.5, lv, 0.12, 0.75, whole_box=False):
+                continue
+            cx, cz = (x0 + x1) / 2, (z0 + z1) / 2
+            if any(abs(dd["at"][1] - lv - 1.0) < 1.6 and abs(dd["at"][0] - cx) < 1.9 and abs(dd["at"][2] - cz) < 1.9 for dd in m.doors):
+                continue
+            if any(abs(q["at"][1] - lv) < 1.5 and ((q["at"][0] - cx) ** 2 + (q["at"][2] - cz) ** 2) < 1.2 ** 2 for q in m.props):
+                continue
+            if pid in ONE_PER_ROOM and any(o == pid and abs(oy - lv) < 0.2 and (ox - cx) ** 2 + (oz - cz) ** 2 < ROOM_SIZE ** 2 for o, ox, oy, oz in placed):
+                continue
+            if any(abs(oy - lv) < 0.2 and (ox - cx) ** 2 + (oz - cz) ** 2 < 1.3 ** 2 for _o, ox, oy, oz in placed):
+                continue
+            if any(_overlap(q, pid, (x0, x1, z0, z1), lv) for q in m.props):
+                continue
+            m.against(pid, side, face, along, y=lv)
+            placed.append((pid, cx, lv, cz))
+            per_level[lv] += 1
+            taken += 1
+    for lv in storeys:
+        log("wall dressing at floor %.2f: %d placed" % (lv, per_level[lv]))
+    return taken
+
+
+def _rect_clear(m, x0, x1, z0, z1, lv, lo_rel, hi_rel, whole_box=True):
+    """No solid box between lv + lo_rel and lv + hi_rel (its top for a step test) in the rectangle.
+    whole_box True: any box overlapping that height band; False: only a box whose top is in the band."""
+    for b in m.boxes:
+        if not b.get("solid", True):
+            continue
+        (bx, by, bz), (sx, sy, sz) = b["at"], b["size"]
+        if b.get("yaw"):
+            yaw = math.radians(b["yaw"])
+            sx, sz = abs(sx * math.cos(yaw)) + abs(sz * math.sin(yaw)), abs(sx * math.sin(yaw)) + abs(sz * math.cos(yaw))
+        if bx + sx / 2 <= x0 or bx - sx / 2 >= x1 or bz + sz / 2 <= z0 or bz - sz / 2 >= z1:
+            continue
+        top, bot = by + sy / 2, by - sy / 2
+        if whole_box:
+            if top > lv + lo_rel and bot < lv + hi_rel:
+                return False
+        elif lv + lo_rel < top < lv + hi_rel and bot < lv + 0.3 and sy < 1.0 and min(sx, sz) >= 0.25:   # not a skirting
+            return False
+    return True
+
+
+def _rect_floored(m, x0, x1, z0, z1, lv):
+    """Floor at this level under the rectangle's corners and middle."""
+    for fx in (x0 + 0.03, (x0 + x1) / 2, x1 - 0.03):
+        for fz in (z0 + 0.03, (z0 + z1) / 2, z1 - 0.03):
+            if not m._floored(fx, lv, fz, edge=0.0):
+                return False
+    return True
+
+
+def _overlap(q, pid, rect, lv):
+    qw, qd = build_maps.footprint(q["id"], q.get("yaw", 0.0))
+    if abs(q["at"][1] - lv) > 1.2:
+        return False
+    x0, x1, z0, z1 = rect
+    return q["at"][0] + qw / 2 + 0.15 > x0 and q["at"][0] - qw / 2 - 0.15 < x1 and q["at"][2] + qd / 2 + 0.15 > z0 and q["at"][2] - qd / 2 - 0.15 < z1
+
+
+def spread_spawns(m, levels, count, gap=3.5, log=print):
+    """Spawns spread over rooms and floors (--spread-spawns=N), run last, after the doors are hung and
+    the props down. The author's starts come in adjacent pairs 1.2 m apart (two to a doorway), so a start
+    within `gap` metres of one already kept on its floor is dropped; the clearest open floor
+    (`Map.spots`, which keeps 1.2 m off walls, props and 1.6 m off a door) tops up to N, farthest from
+    what is chosen first, and no one floor takes more than its share until the rest cannot be filled.
+    Floors that are not roofed (the yard) count as one floor, y 0."""
+    def key(y):
+        return round(y, 1)
+    chosen = []
+    for sp in m.spawns["players"]:
+        x, y, z = sp["at"]
+        if all(abs(key(y) - key(c[1])) > 0.2 or (x - c[0]) ** 2 + (z - c[2]) ** 2 >= gap ** 2 for c in chosen):
+            chosen.append((x, y, z, sp["yaw"]))
+    log("spawns: %d of the author's %d kept, %.1f m apart" % (len(chosen), len(m.spawns["players"]), gap))
+    pool = []
+    for lv in levels:
+        for size, x, z in m.spots(y=lv, step=1.5, top=400):
+            # A yard needs 2 m of clear floor round a spot; a room's spot may be as tight as 1.2 m (`spots` goes no lower).
+            if (size >= 2.0 and abs(lv) < 0.2 and not _roofed(m, x, lv, z)) or _roofed(m, x, lv, z):
+                pool.append((x, lv + 0.05, z))
+    floors = sorted({key(y) for _x, y, _z in pool} | {key(c[1]) for c in chosen})
+    for share in (max(2, -(-count // max(1, len(floors)))), count):
+        while len(chosen) < count:
+            tally = {}
+            for c in chosen:
+                tally[key(c[1])] = tally.get(key(c[1]), 0) + 1
+            best, best_d = None, 0.0
+            for x, y, z in pool:
+                if tally.get(key(y), 0) >= share:
+                    continue
+                d = min(((x - c[0]) ** 2 + (z - c[2]) ** 2 + (0.0 if abs(y - c[1]) < 0.2 else 400.0)) for c in chosen) if chosen else 1e9
+                if d > best_d:
+                    best, best_d = (x, y, z), d
+            if best is None or best_d < gap ** 2:
+                break
+            chosen.append((best[0], best[1], best[2], 0.0))
+    m.spawns["players"][:] = []
+    for x, y, z, yaw in chosen:
+        m.spawn(x, z, yaw=yaw, y=y)
+    log("spawns: %d spread over %d floors" % (len(chosen), len(floors)))
+    return len(chosen)
+
 
 def main(argv):
     args = [a for a in argv[1:] if not a.startswith("--")]
@@ -432,6 +657,8 @@ def main(argv):
     widen = False
     hang = False
     dress = 0
+    dress_walls_n = 0
+    spread_n = 0
     no_doors = False
     slide = False
     cover = 0
@@ -475,6 +702,10 @@ def main(argv):
             hang = True
         elif a.startswith("--dress="):
             dress = int(a[8:])
+        elif a.startswith("--dress-walls="):
+            dress_walls_n = int(a[14:])
+        elif a.startswith("--spread-spawns="):
+            spread_n = int(a[16:])
         elif a == "--no-doors":
             no_doors = True
         elif a.startswith("--drop-kind="):
@@ -786,6 +1017,13 @@ def main(argv):
         print("widened %d doorways to 1.4 m" % docboxes.widen_doors(doc["boxes"], doors=doc["doors"]))
     if hang:
         hang_doorways(m, doc)
+    if dress_walls_n or spread_n:
+        zones = [(z[0] - ox, z[1] - ox, round(z[2] - oy, 3), z[3] - oz, z[4] - oz, z[5]) for z in floor_zones(bsp)]
+    if dress_walls_n:
+        dress_walls(m, zones, dress_walls_n, 17)
+    if spread_n:
+        spread_spawns(m, sorted({z[2] for z in zones} | {0.0}), spread_n)
+        m._face_spawns()
     # The doors are hung after build() settled the spawns: one that stood against a doorway is in
     # the panel now, so settle again with the doors in the way.
     if doc["doors"] is m.doors and doc["boxes"] is m.boxes and doc["spawns"] is m.spawns:
