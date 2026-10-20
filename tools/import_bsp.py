@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Converts a Source 1 community .bsp (VBSP 19/20) into a murder_map document.
 
-    tools/import_bsp.py <map.bsp> <id> "<Name>" <author> <page-url> [--out=maps/<id>.json] [--style=yard] [--field=round_seconds=300] [--drop-beside=x,z,kind] [--clear=x0,z0,x1,z1] [--prune-pockets] [--widen-doors] [--no-doors] [--slide-doors] [--terrain[=material]] [--dusk] [--skip-start=N] [--skip-door=x,z] [--one-way=x,z] [--cover=N] [--cover-gap=m] [--blurb=text] [--drop-kind=id] [--thin=id:N]
+    tools/import_bsp.py <map.bsp> <id> "<Name>" <author> <page-url> [--out=maps/<id>.json] [--style=yard] [--field=round_seconds=300] [--drop-beside=x,z,kind] [--clear=x0,z0,x1,z1] [--prune-pockets] [--widen-doors] [--hang-doorways] [--dress=N] [--no-doors] [--slide-doors] [--terrain[=material]] [--dusk] [--skip-start=N] [--skip-door=x,z] [--one-way=x,z] [--cover=N] [--cover-gap=m] [--blurb=text] [--drop-kind=id] [--thin=id:N]
 
 Adapted from hide-n-seek-maps' importer (copied, not linked): one spawn group, `players`, from the author's starts plus the clearest open floor up to 24.
 
@@ -72,6 +72,9 @@ TOOLS = ("TOOLS/", "tools/")
 TEXTURE_MAP = [
     ("CEILINGTILE", "ceiling", None),
     ("OFFCEILING", "concrete", None),
+    ("OFFFLRASNOW", "snow", None),
+    ("OFFFLRA", "carpet", (0.62, 0.70, 0.86)),      # an office's carpet tile: slate blue,
+    ("OFFFLRB", "carpet", (0.86, 0.66, 0.64)),      # and a rust red for the other rooms
     ("CARPET", "carpet", None),
     ("BLINDS", "glass", None),
     ("LIGHTCOVER", "glass", (1.00, 1.00, 0.92)),
@@ -85,6 +88,11 @@ TEXTURE_MAP = [
     ("WALLOFFICE", "paint", (0.92, 0.94, 1.00)),
     ("OFFWLLB", "plaster", (0.90, 0.95, 1.00)),
     ("OFFWLLC", "paint", (0.96, 0.94, 0.88)),
+    ("OFFWLLD", "paint", (0.98, 0.84, 0.80)),       # painted walls, one colour a room's family
+    ("OFFWLLE", "paint", (0.82, 0.93, 0.84)),
+    ("OFFWLLF", "paint", (0.98, 0.92, 0.76)),
+    ("OFFWLLG", "paint", (0.80, 0.88, 0.97)),
+    ("BRICKFLOOR", "sidewalk", None),
     ("BUILDING_TEMPLATE", "plaster", (0.95, 0.90, 0.82)),
     ("GLASSWINDOW", "glass", None),
     ("CEILING01", "ceiling", None),
@@ -154,6 +162,8 @@ PROP_MAP = {
     "file_box": "survival_box",
     "plant01": "furniture_potted_plant",
     "cactus": "nature_cactus_tall",
+    "file_cabinet1_group": "furniture_side_table_drawers",
+    "microwave": "furniture_kitchen_microwave",
     "coffee_mug": "food_mug",
     "coffee_mug2": "food_mug",
     "coffee_mug3": "food_mug",
@@ -350,6 +360,67 @@ COVER_INDOOR = ("furniture_bed_single", "furniture_bookcase_closed_wide", "furni
                 "furniture_kitchen_cabinet", "furniture_bed_double", "furniture_cabinet_television", "furniture_side_table_drawers")
 
 
+# What an office has that the author's brushes and desk clutter leave out (--dress): plants,
+# a bookcase, a sofa and a bin on the open floor of each room, seeded so a rerun is the same.
+OFFICE_DRESS = ("furniture_potted_plant", "furniture_plant_small1", "furniture_potted_plant", "furniture_bookcase_closed_wide",
+                "furniture_trashcan", "furniture_lounge_sofa", "furniture_coat_rack_standing", "furniture_plant_small2")
+
+
+def hang_doorways(m, doc, log=print):
+    """A door in every doorway the author left open (--hang-doorways). This map's meeting rooms and
+    offices are bare openings, not door entities, so add_doors finds nothing; the doorway is the
+    gap of 1.4 m (what --widen-doors makes of the author's) between two collinear wall slabs with a
+    header over it, and the door fills it up to the header. It runs after the widening, on finished
+    coordinates. Props in the panel's sweep go, as add_doors does."""
+    walls = []
+    for b in doc["boxes"]:
+        w, h, d = b["size"]
+        if b.get("solid", True) and not b.get("yaw") and h >= 2.3 and b["at"][1] - h / 2 < 0.5 and min(w, d) <= 0.4 < max(w, d):
+            walls.append(b)
+    hung = 0
+    for a in walls:
+        axis = 2 if a["size"][2] > a["size"][0] else 0
+        cross = 0 if axis == 2 else 2
+        for c in walls:
+            if c is a or c["size"][axis] <= c["size"][cross] or abs(c["at"][cross] - a["at"][cross]) > 0.02:
+                continue
+            if abs(c["size"][1] - a["size"][1]) > 0.01 or abs(c["at"][1] - a["at"][1]) > 0.01:
+                continue
+            lo = a["at"][axis] + a["size"][axis] / 2
+            hi = c["at"][axis] - c["size"][axis] / 2
+            if not 1.38 <= hi - lo <= 1.42:
+                continue
+            mid = (lo + hi) / 2
+            # The header: a box over the gap, thin across the wall, its underside the door's top.
+            heads = [b for b in doc["boxes"] if b["at"][1] - b["size"][1] / 2 > 1.8 and b["at"][1] - b["size"][1] / 2 < a["at"][1] + a["size"][1] / 2 - 0.1
+                     and abs(b["at"][cross] - a["at"][cross]) < 0.3 and abs(b["at"][axis] - mid) < 0.1 and abs(b["size"][axis] - (hi - lo)) < 0.1
+                     and b["size"][cross] <= 0.4]
+            if not heads:
+                continue
+            top = min(b["at"][1] - b["size"][1] / 2 for b in heads)
+            floor_y = a["at"][1] - a["size"][1] / 2
+            if any(abs(d["at"][axis] - mid) < 0.3 and abs(d["at"][cross] - a["at"][cross]) < 0.3 for d in doc["doors"]):
+                continue
+            # The author's own leaf, left standing in the opening in whatever material (dot-map's
+            # drop_door_leaves only takes wood): a door-high slab, under 15 cm thick, inside the gap.
+            leaves = [b for b in doc["boxes"] if b is not a and b is not c and 1.9 <= b["size"][1] <= 2.3 and min(b["size"][0], b["size"][2]) < 0.15
+                      and abs(b["at"][cross] - a["at"][cross]) < 0.3 and lo - 0.05 <= b["at"][axis] - b["size"][axis] / 2 and b["at"][axis] + b["size"][axis] / 2 <= hi + 0.05
+                      and b["size"][axis] < 1.2 and b["at"][1] - b["size"][1] / 2 < floor_y + 0.2]
+            for b in leaves:
+                doc["boxes"].remove(b)
+            m.door("x" if axis == 0 else "z", lo, hi, a["at"][cross], floor_y, top, name="door", hinge="start")
+            hung += 1
+            gone = [q for q in doc["props"]
+                    if lo - 0.5 <= q["at"][axis] <= hi + 0.5 and abs(q["at"][cross] - a["at"][cross]) <= 1.6 + 0.35 and abs(q["at"][1] - floor_y) < 1.5]
+            for q in gone:
+                doc["props"].remove(q)
+            if gone:
+                at = (mid, a["at"][cross]) if axis == 0 else (a["at"][cross], mid)
+                log("  doorway at (%.1f, %.1f): %d props cleared from its swing" % (at[0], at[1], len(gone)))
+    log("doorways: %d hung" % hung)
+    return hung
+
+
 def main(argv):
     args = [a for a in argv[1:] if not a.startswith("--")]
     out_path = None
@@ -359,6 +430,8 @@ def main(argv):
     clears = []
     pockets = False
     widen = False
+    hang = False
+    dress = 0
     no_doors = False
     slide = False
     cover = 0
@@ -398,6 +471,10 @@ def main(argv):
             blurb = a[8:]
         elif a == "--widen-doors":
             widen = True
+        elif a == "--hang-doorways":
+            hang = True
+        elif a.startswith("--dress="):
+            dress = int(a[8:])
         elif a == "--no-doors":
             no_doors = True
         elif a.startswith("--drop-kind="):
@@ -578,6 +655,10 @@ def main(argv):
         levels = sorted({round(support(g[0], g[2], None, 0.0, g[1] + 0.6) or max(g[1] - 0.05, 0.0), 2) for g in gstarts})
         for lv in levels:
             print("cover furniture at floor %.2f: %d placed" % (lv, docboxes.scatter_cover(m, max(2, cover // len(levels)), 7, COVER_INDOOR, spacing=cover_gap, clear=1.6, floor_y=lv)))
+    if dress:
+        levels = sorted({round(support(g[0], g[2], None, 0.0, g[1] + 0.6) or max(g[1] - 0.05, 0.0), 2) for g in gstarts})
+        for lv in levels:
+            print("dressing at floor %.2f: %d placed" % (lv, docboxes.scatter_cover(m, max(2, dress // len(levels)), 11, OFFICE_DRESS, spacing=4.0, clear=1.5, floor_y=lv)))
     # Everybody starts apart: the author's starts (they stand on whatever floor is under them), then
     # the clearest open floor until there are 24, at least 6 m from any other start.
     for i, e in enumerate(starts):
@@ -703,6 +784,14 @@ def main(argv):
                 d["away"] = False
     if widen:
         print("widened %d doorways to 1.4 m" % docboxes.widen_doors(doc["boxes"], doors=doc["doors"]))
+    if hang:
+        hang_doorways(m, doc)
+    # The doors are hung after build() settled the spawns: one that stood against a doorway is in
+    # the panel now, so settle again with the doors in the way.
+    if doc["doors"] is m.doors and doc["boxes"] is m.boxes and doc["spawns"] is m.spawns:
+        m._settle_spawns()
+    else:
+        raise SystemExit("the document no longer shares the map's lists: settle the spawns from the document")
     out_path = out_path or os.path.join(build_maps.ROOT, "maps", mid + ".json")
     with open(out_path, "w") as f:
         f.write(json.dumps(doc, indent=1) + "\n")
