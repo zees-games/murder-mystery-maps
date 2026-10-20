@@ -1678,7 +1678,232 @@ def toys_motel(m):
 
 TOY_PLANS = {"mm_mansion": toys_mansion, "mm_motel": toys_motel}
 
-MAPS = {"mm_mansion": mansion, "mm_motel": motel}
+# --- Open Yard -------------------------------------------------------------------------------
+# An original map in the spirit of the sandbox "test yard" many shooters ship: a big open grass yard
+# with a large hall (rooms off it), a tall office tower, a flat-roofed office block and a water
+# pool. Nothing of any existing map's geometry is used; the sizes and the plan are this repository's own.
+
+def office_floor_plan(m, x0, z0, x1, z1, y, floors, level, doors_out):
+    """One storey of the tower: stair halls at both ends, a corridor along x, offices both sides."""
+    H = 3.2
+    zc = (z0 + z1) / 2
+    SH = 3.6
+    ya = y
+    # Outer walls.
+    n_win = [(x, 1.4) for x in (x0 + 6.0, x0 + 9.0, x1 - 9.0, x1 - 6.0)]
+    n_win = [(x, w) for x, w in n_win if x0 + SH + 1.0 < x < x1 - SH - 1.0]
+    W(m, x0, z0, x1, z0, wins=n_win, y0=ya, height=H, outer=True, inward="+")
+    W(m, x0, z1, x1, z1, wins=n_win, y0=ya, height=H, outer=True, inward="-")
+    for xw, inward in ((x0, "+"), (x1, "-")):
+        W(m, xw, z0, xw, z1, doors=[(zc, D("door", w=1.4))] if doors_out else [], wins=[] if doors_out else [(zc, 1.4)],
+          y0=ya, height=H, outer=True, inward=inward)
+    # Stair halls divided from the offices, open to the corridor.
+    for xw in (x0 + SH, x1 - SH):
+        W(m, xw, z0, xw, z1, gaps=[(zc, 2.4)], y0=ya, height=H)
+    xs = [x0 + SH + (x1 - x0 - 2 * SH) * i / 2 for i in range(3)]
+    # Corridor walls with a door to each office; partitions between offices.
+    for zw in (zc - 1.2, zc + 1.2):
+        W(m, x0 + SH, zw, x1 - SH, zw, doors=[((a + b) / 2, D("door", w=1.1)) for a, b in zip(xs, xs[1:])], y0=ya, height=H)
+    for xw in xs[1:-1]:
+        W(m, xw, z0, xw, zc - 1.2, y0=ya, height=H)
+        W(m, xw, zc + 1.2, xw, z1, y0=ya, height=H)
+    # Lamps: a panel in each office, the corridor and the halls.
+    for a, b in zip(xs, xs[1:]):
+        for zl in ((z0 + zc - 1.2) / 2, (zc + 1.2 + z1) / 2):
+            m.lamp_panel((a + b) / 2, zl, ya + H)
+            m.light((a + b) / 2, ya + H - 0.5, zl, rng=6.5, energy=0.9, colour=WARM)
+    for xl in (x0 + SH + 3.0, x1 - SH - 3.0):
+        m.lamp_panel(xl, zc, ya + H)
+        m.light(xl, ya + H - 0.5, zc, rng=8.0, energy=0.9, colour=WARM)
+    for xl in (x0 + SH / 2, x1 - SH / 2):
+        m.light(xl, ya + H - 0.5, zc, rng=8.0, energy=0.8, colour=WARM)
+    # Furniture: a desk and chair at the outer wall of each office, a bookcase on a partition.
+    for i, (a, b) in enumerate(zip(xs, xs[1:])):
+        xm = (a + b) / 2
+        for side, wall in (("n", z0 + 0.15), ("s", z1 - 0.15)):
+            if level == 1 and i == 1:
+                continue    # an empty office on the second storey
+            d = m.against("furniture_desk", side, wall, xm)
+            m.prop("furniture_chair_desk", xm, d["at"][2] + (1.1 if side == "n" else -1.1), 0.0 if side == "s" else 180.0, y=ya)
+            d["at"][1] = ya
+            m.against("furniture_bookcase_closed", "w" if i == 0 else "e", (a + 0.1) if i == 0 else (b - 0.1),
+                      (z0 + zc - 1.2) / 2 + (0.9 if side == "n" else 0) if side == "n" else (zc + 1.2 + z1) / 2 + 0.9, y=ya) if False else None
+
+
+def open_yard():
+    m = Map(
+        "mm_open_yard", "Open Yard",
+        "A wide grass yard with a long hall, an office tower, a flat-roofed block and a pool between them. Plenty of ways round, and nowhere to hide for long.",
+        DUSK, round_seconds=300,
+    )
+    H = 3.2
+    X0, X1, Z0, Z1 = -34.0, 34.0, -34.0, 34.0
+    m.floor(X0, Z0, X1, Z1, "grass", (0.62, 0.8, 0.58), y=GROUND)
+    boundary(m, X0, Z0, X1, Z1, height=3.0, mat="brick", tint=(0.72, 0.66, 0.6))
+
+    # Paths of paving between the buildings.
+    for a, b, c, d in ((-8.0, -12.0, 8.0, -9.0), (-1.5, -9.0, 1.5, 34.0), (-34.0, 22.0, 34.0, 25.0), (7.0, -12.0, 9.0, 4.0)):
+        m.floor(a, b, c, d, "sidewalk", (0.9, 0.88, 0.84), y=GROUND + 0.01)
+
+    # --- The hall: a long great hall on the south side, four rooms along the back. ---
+    hx0, hx1, hz0, hz1 = -30.0, -8.0, -30.0, -12.0
+    HH = 4.5
+    m.floor(hx0, hz0, hx1, hz1, "wood_floor", (0.85, 0.8, 0.72))
+    m.ceiling(hx0, hz0, hx1, hz1, HH, "ceiling", None, "roof", (0.45, 0.34, 0.3), 0.4)
+    split = -20.0
+    W(m, hx0, hz0, hx1, hz0, doors=[(-11.0, D("door", w=1.3))], wins=[(-27.0, 1.4), (-22.0, 1.4), (-16.0, 1.4)],
+      height=HH, outer=True, inward="+")
+    W(m, hx0, hz1, hx1, hz1, doors=[(-24.0, D("door", w=1.8)), (-14.0, D("door", w=1.8))], wins=[(-28.0, 1.6), (-19.0, 2.2), (-10.0, 1.6)],
+      height=HH, outer=True, inward="-")
+    W(m, hx0, hz0, hx0, hz1, doors=[(-16.0, D("door", w=1.4))], wins=[(-25.0, 1.4), (-22.0, 1.4)], height=HH, outer=True, inward="+")
+    W(m, hx1, hz0, hx1, hz1, doors=[(-16.0, D("door", w=1.4))], wins=[(-25.0, 1.4)], height=HH, outer=True, inward="-")
+    # Rooms along the back (z -30..-20), a door each onto the hall; neighbours in pairs share a door.
+    rx = [-30.0, -24.5, -19.0, -13.5, -8.0]
+    W(m, hx0, split, hx1, split, doors=[((a + b) / 2 - 1.2 if False else (a + b) / 2, D("door", w=1.1)) for a, b in zip(rx, rx[1:])], height=HH)
+    for i, xw in enumerate(rx[1:-1]):
+        W(m, xw, hz0, xw, split, doors=[(-25.0, D("door", w=1.1))] if i != 1 else [], height=HH)
+    lit(m, hx0, split, hx1, hz1, HH, energy=1.1, cell=7.5)
+    for a, b in zip(rx, rx[1:]):
+        m.light((a + b) / 2, HH - 0.7, -25.0, rng=7.0, energy=0.9, colour=WARM)
+        m.lamp_panel((a + b) / 2, -25.0, HH)
+    # Great hall: long tables, benches along both walls, columns down the middle.
+    for xc in (-26.0, -19.0, -12.0):
+        m.prop("furniture_table_cloth", xc, -16.0, 90.0)
+        m.prop("furniture_bench", xc, -17.4, 180.0)
+        m.prop("furniture_bench", xc, -14.6, 0.0)
+    for xc in (-22.5, -15.5):
+        m.span(xc - 0.25, xc + 0.25, 0.0, HH, -17.8 - 0.25, -17.8 + 0.25, "stone", (0.85, 0.82, 0.78))
+        m.span(xc - 0.25, xc + 0.25, 0.0, HH, -13.8 - 0.25, -13.8 + 0.25, "stone", (0.85, 0.82, 0.78))
+    m.against("furniture_bookcase_closed_wide", "s", hz1 - 0.15, -29.0) if False else None
+    for xc in (-22.0, -16.0, -10.0):
+        m.against("furniture_bookcase_closed", "n", split + 0.1, xc) if abs(xc + 24.0) > 3 and abs(xc + 14.0) > 3 else None
+    # Furniture in the four rooms.
+    for (a, b), kind in zip(zip(rx, rx[1:]), ("desk", "sofa", "table", "bed")):
+        xm = (a + b) / 2
+        if kind == "desk":
+            m.against("furniture_desk", "n", hz0 + 0.15, xm + 0.8)
+            m.prop("furniture_chair_desk", xm + 0.8, -28.0, 180.0)
+        elif kind == "sofa":
+            m.against("furniture_lounge_sofa", "n", hz0 + 0.15, xm)
+        elif kind == "table":
+            m.prop("furniture_table_round", xm + 0.6, -27.0)
+        else:
+            m.against("furniture_bookcase_closed", "n", hz0 + 0.15, xm + 1.0)
+            m.against("furniture_cabinet_television", "e", b - 0.1, -26.0)
+
+    # --- The tower: three storeys of offices round a corridor, stairs at both ends. ---
+    tx0, tx1, tz0, tz1 = 8.0, 24.0, -32.0, -18.0
+    zc = (tz0 + tz1) / 2
+    floors = 3
+    m.floor(tx0, tz0, tx1, tz1, "carpet", (0.7, 0.74, 0.82))
+    SH = 3.6
+    for lvl in range(floors):
+        y = lvl * H
+        if lvl > 0:
+            holes = []
+            if lvl == 1:
+                holes = [(tx0, tz1 - 6.7, tx0 + 1.8, tz1), (tx1 - 1.8, tz1 - 6.7, tx1, tz1)]
+            else:
+                holes = [(tx0 + 1.8, tz1 - 6.7, tx0 + 3.6, tz1), (tx1 - 3.6, tz1 - 6.7, tx1 - 1.8, tz1)]
+            slab(m, tx0, tz0, tx1, tz1, y, holes, "carpet", (0.7, 0.74, 0.82))
+        office_floor_plan(m, tx0, tz0, tx1, tz1, y, floors, lvl, lvl == 0)
+    # Stairs: flight A (storey 0 to 1) in the outer column, flight B (1 to 2) in the inner column.
+    for west in (True, False):
+        xa0, xa1 = (tx0 + 0.15, tx0 + 1.65) if west else (tx1 - 1.65, tx1 - 0.15)
+        xb0, xb1 = (tx0 + 1.95, tx0 + 3.45) if west else (tx1 - 3.45, tx1 - 1.95)
+        flight(m, xa0, xa1, tz1 - 6.7, tz1 - 0.2, 0.0, H, "n", "wood", (0.7, 0.62, 0.5))
+        flight(m, xb0, xb1, tz1 - 6.7, tz1 - 0.2, H, 2 * H, "n", "wood", (0.7, 0.62, 0.5))
+        for lvl in (1, 2):
+            rx_ = (tx0 + 1.8) if west else (tx1 - 1.8)
+            if lvl == 1:
+                m.span(rx_ - 0.04, rx_ + 0.04, H, H + 1.0, tz1 - 6.7, tz1, "metal", (0.35, 0.37, 0.4))
+            else:
+                rx2 = (tx0 + 3.6) if west else (tx1 - 3.6)
+                m.span(rx2 - 0.04, rx2 + 0.04, 2 * H, 2 * H + 1.0, tz1 - 6.7, tz1, "metal", (0.35, 0.37, 0.4))
+    m.ceiling(tx0, tz0, tx1, tz1, floors * H, "ceiling", None, "roof", (0.35, 0.36, 0.4), 0.35)
+    # A rooftop parapet nobody can reach: the tower is solid at the top. A sign on its wall.
+    m.span(tx0 - 0.35, tx1 + 0.35, floors * H + 0.35, floors * H + 1.0, tz0 - 0.35, tz0 - 0.15, "concrete", (0.7, 0.7, 0.72))
+
+    # --- The flat-roofed office block: a corridor and eight rooms, doors at both ends. ---
+    bx0, bx1, bz0, bz1 = 12.0, 30.0, 2.0, 14.0
+    bc = (bz0 + bz1) / 2
+    BH = 3.0
+    m.floor(bx0, bz0, bx1, bz1, "carpet", (0.78, 0.74, 0.7))
+    m.ceiling(bx0, bz0, bx1, bz1, BH, "ceiling", None, "roof", (0.3, 0.3, 0.32), 0.3)
+    W(m, bx0, bz0, bx1, bz0, wins=[(x, 1.4) for x in (15.0, 19.0, 23.0, 27.0)], height=BH, outer=True, inward="+")
+    W(m, bx0, bz1, bx1, bz1, wins=[(x, 1.4) for x in (15.0, 19.0, 23.0, 27.0)], height=BH, outer=True, inward="-")
+    W(m, bx0, bz0, bx0, bz1, doors=[(bc, D("door", w=1.4))], height=BH, outer=True, inward="+")
+    W(m, bx1, bz0, bx1, bz1, doors=[(bc, D("door", w=1.4))], height=BH, outer=True, inward="-")
+    bxs = [bx0 + 4.5 * i for i in range(5)]
+    for zw in (bc - 1.2, bc + 1.2):
+        W(m, bx0, zw, bx1, zw, doors=[((a + b) / 2, D("door", w=1.1)) for a, b in zip(bxs, bxs[1:])], height=BH)
+    for xw in bxs[1:-1]:
+        W(m, xw, bz0, xw, bc - 1.2, height=BH)
+        W(m, xw, bc + 1.2, xw, bz1, height=BH)
+    for a, b in zip(bxs, bxs[1:]):
+        xm = (a + b) / 2
+        for zl in ((bz0 + bc - 1.2) / 2, (bc + 1.2 + bz1) / 2):
+            m.lamp_panel(xm, zl, BH)
+            m.light(xm, BH - 0.5, zl, rng=6.0, energy=0.9, colour=WARM)
+        m.against("furniture_desk", "n", bz0 + 0.15, xm + 0.6)
+        m.prop("furniture_chair_desk", xm + 0.6, bz0 + 1.6, 180.0)
+        m.against("furniture_cabinet_television", "s", bz1 - 0.15, xm + 0.6) if False else None
+        m.against("furniture_bookcase_closed", "s", bz1 - 0.15, xm - 1.2)
+    for xl in (bx0 + 4.5, bx0 + 13.5):
+        m.lamp_panel(xl, bc, BH)
+        m.light(xl, BH - 0.5, bc, rng=9.0, energy=1.0, colour=WARM)
+
+    # --- The pool: sunk water you can wade across, a coping of stone, a lifeguard platform. ---
+    px0, px1, pz0, pz1 = -24.0, -8.0, 2.0, 16.0
+    m.overlay(px0, pz0, px1, pz1, "water")
+    for a, b, c, d in ((px0 - 0.4, px1 + 0.4, pz0 - 0.4, pz0), (px0 - 0.4, px1 + 0.4, pz1, pz1 + 0.4),
+                       (px0 - 0.4, px0, pz0, pz1), (px1, px1 + 0.4, pz0, pz1)):
+        m.span(a, b, 0.0, 0.3, c, d, "stone", (0.88, 0.88, 0.84))
+    m.span(px0 + 5.0, px0 + 8.0, 0.0, 1.3, pz1 - 0.2, pz1 + 0.0, "stone", (0.8, 0.8, 0.78)) if False else None
+    # The platform on the north edge: a deck with a flight of stairs up to it.
+    m.span(-16.0, -13.0, 0.0, 1.6, 0.0, 1.6, "wood", (0.7, 0.55, 0.4)) if False else None
+    m.span(-17.0, -14.0, 1.2, 1.4, 17.0, 20.0, "wood", (0.75, 0.6, 0.45))
+    flight(m, -14.0, -12.6, 17.0, 20.0, 0.0, 1.4, "n", "wood", (0.75, 0.6, 0.45)) if False else None
+    flight(m, -17.0, -14.0, 20.0, 22.0, 0.0, 1.4, "n", "wood", (0.75, 0.6, 0.45)) if False else None
+    for xc in (-6.0, -26.0):
+        for zc_ in (6.0, 12.0):
+            m.prop("furniture_bench_cushion_low", xc, zc_, -90.0 if xc > -10 else 90.0)
+    for xc in (-4.0, -28.0, -12.0):
+        m.prop("nature_plant_bush", xc, 18.0)
+
+    # --- The yard: cover to fight round (crates, hedges, containers, rocks), trees along the edges. ---
+    for x0_, z0_, x1_, z1_, mat, tint in (
+            (-5.0, -4.0, -1.0, -2.8, "hedge", (0.5, 0.7, 0.45)), (4.0, 8.0, 8.0, 9.2, "hedge", (0.5, 0.7, 0.45)),
+            (-6.0, 26.0, -2.0, 27.2, "hedge", (0.5, 0.7, 0.45)), (2.0, 26.0, 6.0, 27.2, "hedge", (0.5, 0.7, 0.45)),
+            (14.0, 26.0, 20.0, 28.4, "metal", (0.78, 0.32, 0.26)), (22.0, 20.0, 24.4, 26.0, "metal", (0.28, 0.4, 0.62)),
+            (-30.0, 26.0, -24.0, 28.4, "metal", (0.3, 0.52, 0.34)), (-4.0, 4.0, -2.8, 8.0, "concrete", (0.74, 0.74, 0.7)),
+            (10.0, 18.0, 13.0, 18.6, "concrete", (0.74, 0.74, 0.7)), (26.0, -10.0, 32.0, -9.4, "concrete", (0.74, 0.74, 0.7)),
+            (-6.0, -8.0, -5.4, -4.0, "concrete", (0.74, 0.74, 0.7))):
+        m.span(x0_, x1_, 0.0, 1.0 if mat == "hedge" else (2.4 if mat == "metal" else 1.1), z0_, z1_, mat, tint)
+    for x, z in ((-1.0, -6.0), (5.0, 12.0), (-6.0, 20.0), (3.0, 29.0), (-14.0, 28.0), (26.0, 18.0), (31.0, 6.0), (28.0, -5.0),
+                 (0.0, 14.0), (-7.0, -2.0), (12.0, -6.0)):
+        m.prop("furniture_cardboard_box_closed" if (x + z) % 2 else "furniture_cardboard_box_open", x, z, (x * 13 + z * 7) % 360)
+    for i, (x, z) in enumerate(((-32.0, -8.0), (-32.0, 14.0), (-31.0, 31.0), (-12.0, 31.0), (10.0, 31.0), (32.0, 31.0), (32.0, 18.0),
+                                (32.0, -20.0), (-3.0, -32.0), (31.0, -33.0), (-2.0, -8.0), (6.0, 20.0), (-12.0, 24.0))):
+        m.prop(("nature_tree_oak", "nature_tree_default", "nature_tree_tall", "nature_tree_detailed")[i % 4], x, z, i * 47 % 360)
+    for x, z in ((-6.0, -9.0), (3.0, 4.0), (9.0, 22.0), (-18.0, 24.0), (26.0, 24.0), (32.0, -3.0)):
+        m.prop("nature_rock_large_a" if (x + z) % 3 else "nature_rock_small_a", x, z, x * 9 % 360)
+    for x, z in ((-1.0, 20.0), (-1.0, 10.0), (4.0, -9.0)):
+        m.prop("furniture_bench", x + 1.6, z, -90.0)
+    for x, z in ((-8.0, -8.0), (-1.0, 24.0), (9.0, -9.0), (26.0, 22.0), (-28.0, 22.0), (31.0, 31.0), (-31.0, -31.0)):
+        lamp_pole(m, x, z)
+
+    # --- Spawns: apart, over the yard, the hall and its rooms, the tower floors, the block. ---
+    for x, z, y in ((-27.0, -26.0, 0.0), (-16.0, -26.0, 0.0), (-10.0, -16.0, 0.0), (-26.0, -14.0, 0.0), (-17.0, -14.0, 0.0),
+                    (12.0, -24.0, 0.0), (21.0, -27.0, 0.0), (12.0, -24.0, H), (21.0, -27.0, H), (16.0, -23.0, 2 * H),
+                    (14.0, 5.0, 0.0), (28.0, 11.0, 0.0), (20.0, 5.0, 0.0), (-2.0, -2.0, 0.0), (0.0, 18.0, 0.0), (-16.0, 20.0, 0.0),
+                    (-6.0, 30.0, 0.0), (10.0, 29.0, 0.0), (30.0, 26.0, 0.0), (30.0, -2.0, 0.0), (-30.0, 6.0, 0.0), (-30.0, 20.0, 0.0),
+                    (4.0, -4.0, 0.0), (-12.0, -6.0, 0.0), (20.0, -12.0, 0.0)):
+        m.spawn(x, z, y=y + 0.05)
+    return m.build()
+
+
+MAPS = {"mm_mansion": mansion, "mm_motel": motel, "mm_open_yard": open_yard}
 
 # Maps converted from community levels by tools/import_bsp.py (the command is in each map's README entry).
 # They are written once by the importer and kept, so the builder neither rewrites nor compares them;
