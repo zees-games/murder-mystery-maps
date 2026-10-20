@@ -8,6 +8,7 @@ Maps for game-murder-mystery as JSON documents (`"kind": "murder_map"`), the sib
 - `maps/README.md`: the mapper's copy of the format.
 - `tools/build_maps.py`: the library half (the `Map` class, walls and doors, rooms, stairs, slabs, toy and spawn settling, furnishing helpers), copied from hide-n-seek-maps' builder, then this repository's own half: `DUSK`, `D`, `W`, `lit`, `mansion()`, `motel()`, `TOY_PLANS`, `MAPS`.
 - `tools/prop_sizes.json`: prop sizes and resting tops, copied from the game's catalogue by `--sync-sizes`. Props must use ids in it.
+- `tools/import_bsp.py`: the BSP adapter (copied from hide-n-seek-maps' importer, trimmed to one `players` group; the reader is dot-map's `tools/bsp`, never a copy). Its output is kept in `maps/` and named in `build_maps.IMPORTED`; reruns reproduce it from the command in the README.
 - `project.godot`, `.github/workflows`: the pack that dot-bootstrap links into the game and the release that publishes it.
 
 ## Commands

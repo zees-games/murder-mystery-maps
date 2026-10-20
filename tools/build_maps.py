@@ -1680,6 +1680,11 @@ TOY_PLANS = {"mm_mansion": toys_mansion, "mm_motel": toys_motel}
 
 MAPS = {"mm_mansion": mansion, "mm_motel": motel}
 
+# Maps converted from community levels by tools/import_bsp.py (the command is in each map's README entry).
+# They are written once by the importer and kept, so the builder neither rewrites nor compares them;
+# --check only requires that each exists.
+IMPORTED = ["mm_silence_hollow"]
+
 
 def write_all(check):
     stale = []
@@ -1698,6 +1703,10 @@ def write_all(check):
     if check:
         if stale:
             print("stale: %s (run tools/build_maps.py)" % ", ".join(stale))
+            return 1
+        gone = [i for i in IMPORTED if not os.path.exists(os.path.join(ROOT, "maps", i + ".json"))]
+        if gone:
+            print("missing imported map: %s" % ", ".join(gone))
             return 1
         print("every map is what the builder writes")
     return 0
