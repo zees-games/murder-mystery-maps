@@ -17,7 +17,7 @@ What it does, and why each choice:
 - Axes: Source is Z-up, godot = (x, z, -y). Scale: 1 unit = 0.01905 m (the engine's own
   0.75 inch), which makes a 108-unit door 2.06 m, fits the game's 1.4 m x 2.3 m door convention.
 - Textures are NOT carried. The author's textures are replaced with the game's own materials
-  (Kenney's grid under pastels, ph_materials.gd); TEXTURE_MAP says which, by name.
+  (Poly Haven and ambientCG photographs in the game, mm_materials.gd); dot-map's source_textures.tsv says which, by name.
 - prop_physics become catalogue props by PROP_MAP (the author's HL2 models have no licence we can
   ship; the catalogue is Kenney, CC0). A model with no entry is dropped and counted. PROP_MAP is
   the prop-hunt importer's, whose catalogue has bottles and cans (a disguise); this game's has
@@ -51,7 +51,7 @@ def _dotbsp_path():
 
 sys.path.insert(1, _dotbsp_path())
 from dotbsp import reader as bsp_read  # noqa: E402  (the family's one reader)
-from dotbsp import boxes as dboxes, docboxes, lights as dlights  # noqa: E402  (the shared passes over a document's boxes)
+from dotbsp import boxes as dboxes, docboxes, lights as dlights, texturemap  # noqa: E402  (the shared passes over a document's boxes)
 import build_maps  # noqa: E402
 
 S = 0.01905
@@ -70,48 +70,9 @@ NOT_DOORS = ("lockerdoor", "door_oven")   # func_door_rotating targetnames that 
 SLAB = 28.0     # source units: ~0.53 m, a slope's riser
 
 TOOLS = ("TOOLS/", "tools/")
-TEXTURE_MAP = [
-    ("CEILINGTILE", "ceiling", None),
-    ("OFFCEILING", "concrete", None),
-    ("OFFFLRASNOW", "snow", None),
-    ("OFFFLRA", "carpet", (0.62, 0.70, 0.86)),      # an office's carpet tile: slate blue,
-    ("OFFFLRB", "carpet", (0.86, 0.66, 0.64)),      # and a rust red for the other rooms
-    ("CARPET", "carpet", None),
-    ("BLINDS", "glass", None),
-    ("LIGHTCOVER", "glass", (1.00, 1.00, 0.92)),
-    ("OFFWNDW", "glass", None),
-    ("TRUSS", "metal", None),
-    ("DRTRIM", "metal", None),
-    ("ELEVDR", "metal", None),
-    ("PARTICLEBOARD", "wood", None),
-    ("OFFDR", "wood", None),
-    ("DESKTOP", "wood", None),
-    ("WALLOFFICE", "paint", (0.92, 0.94, 1.00)),
-    ("OFFWLLB", "plaster", (0.90, 0.95, 1.00)),
-    ("OFFWLLC", "paint", (0.96, 0.94, 0.88)),
-    ("OFFWLLD", "paint", (0.98, 0.84, 0.80)),       # painted walls, one colour a room's family
-    ("OFFWLLE", "paint", (0.82, 0.93, 0.84)),
-    ("OFFWLLF", "paint", (0.98, 0.92, 0.76)),
-    ("OFFWLLG", "paint", (0.80, 0.88, 0.97)),
-    ("BRICKFLOOR", "sidewalk", None),
-    ("BUILDING_TEMPLATE", "plaster", (0.95, 0.90, 0.82)),
-    ("GLASSWINDOW", "glass", None),
-    ("CEILING01", "ceiling", None),
-    ("BUILDING", "concrete", None),
-    ("PLASTER", "plaster", (0.95, 0.92, 0.84)),
-    ("GRASS", "grass", (0.85, 0.95, 0.75)),
-    ("ACOUSTICCEILING", "ceiling", None),
-    ("TILEFLOOR", "tile", None),
-    ("WOODFLOOR", "parquet", None),
-    ("TILEROOF", "roof", (1.00, 0.72, 0.62)),
-    ("COMBINEGLASS", "glass", None),
-    ("CONCRETE", "concrete", None),
-    ("STONE", "stone", None),
-    ("BRICK", "brick", None),
-    ("WOOD", "wood", None),
-    ("METAL", "metal", None),
-    ("DEV/", "flat", (0.8, 0.8, 0.82)),
-]
+# The surface of a brush comes from dot-map's shared list (tools/bsp/dotbsp/source_textures.tsv), the one every
+# conversion reads; a new texture goes there, never into this file. `bsp.py unmapped <bsp>` lists what it misses.
+TEXTURE_MAP = texturemap.load()
 
 # HL2 model -> catalogue id. Pieces with no counterpart in the catalogue are left out.
 PROP_MAP = {

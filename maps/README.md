@@ -48,7 +48,7 @@ The building: floors, walls, ceilings, roofs, glass, a pool, a painted line.
 ```
 
 - `at` is the box's **centre**; `size` is its width, height and depth before `yaw` turns it.
-- `mat` is one of: `wood_floor`, `parquet`, `gym`, `tile`, `tile_check`, `tile_small`, `carpet`, `paint`, `plaster`, `ceiling`, `brick`, `stone`, `concrete`, `sidewalk`, `asphalt`, `grass`, `snow`, `dirt`, `sand`, `rubber`, `roof`, `wood`, `metal`, `locker`, `chalkboard`, `whiteboard`, `glass`, `water`, `line`, `hedge`, `fabric`, `flat`. An unknown name is drawn as `flat`. Textures are laid in world space, so two boxes of the same material meet without a seam.
+- `mat` is one of: `wood_floor`, `parquet`, `gym`, `tile`, `tile_check`, `tile_small`, `carpet`, `paint`, `plaster`, `ceiling`, `brick`, `stone`, `concrete`, `sidewalk`, `asphalt`, `grass`, `snow`, `dirt`, `sand`, `rubber`, `roof`, `wood`, `metal`, `locker`, `chalkboard`, `whiteboard`, `glass`, `water`, `line`, `hedge`, `fabric`, `flat`, and the photographed generic ids a converted map uses (the ids of dot-map's `source_textures.tsv`): `plaster_painted`, `plaster_worn`, `wallpaper`, `brick_red`, `stone_wall`, `wood_planks`, `tile_floor`, `tile_wall`, `roof_tiles`, `mud`, `door_wood`. In the game `wood_floor`, `parquet`, `carpet`, `concrete`, `ceiling`, `snow`, `grass` and `metal` are photographs too. An unknown name is drawn as `flat`. Textures are laid in world space, so two boxes of the same material meet without a seam.
 - `tint` multiplies the material's colour.
 - `"solid": false` for anything a player walks through: water, a painted line, a light's glow.
 - `"visible": false` for a collider with nothing drawn: an invisible wall at the edge of the map.
