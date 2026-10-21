@@ -425,6 +425,27 @@ def floor_zones(bsp):
     return zones
 
 
+def retexture_ceilings(boxes):
+    """A thin skin in a floor material that hangs 2 to 4 m over a solid top is a ceiling the author
+    painted with the floor's tile: the underside is what a player sees, so it takes the ceiling
+    material (the hotel's lobby read as a marble checker overhead)."""
+    n = 0
+    for b in boxes:
+        if b["size"][1] > 0.05 or b.get("mat") != "tile_floor":
+            continue
+        x, y, z = b["at"]
+        for o in boxes:
+            if o is b or not o.get("solid", True) or not docboxes.within(o, x, z):
+                continue
+            top = o["at"][1] + o["size"][1] / 2
+            if 2.0 <= y - top <= 4.0:
+                b["mat"] = "ceiling"
+                b.pop("tint", None)
+                n += 1
+                break
+    return n
+
+
 def _roofed(m, x, y, z):
     """Something solid over (x, z) between 2 m and 4 m above y: a room, not the yard or a pool."""
     for b in m.boxes:
@@ -607,6 +628,122 @@ def spread_spawns(m, levels, count, gap=3.5, log=print):
     return len(chosen)
 
 
+# --- The author's sky, light, fog, weather and sound ---------------------------------------------------
+#
+# What the file says about the hour and the air, read for this game's own sky, sun, fog and weather (the
+# author's sky textures are never carried; a name only says what mood to paint). Nothing here is in dot-map's
+# reader yet: it wants a shared `environment` pass there (nightly item `dotbsp-environment`).
+
+# skyname -> (zenith, horizon, the ground under the horizon). The horizon is the fog colour when the map has fog,
+# since distance fades into the sky and any other horizon draws a seam along every ridge.
+SKY_MOODS = {
+    "office": ([0.46, 0.53, 0.65], [0.66, 0.70, 0.76], [0.30, 0.31, 0.32]),          # an overcast afternoon
+    "sky_day02_09": ([0.42, 0.50, 0.62], [0.68, 0.74, 0.80], [0.52, 0.55, 0.58]),   # an overcast winter afternoon
+    "jungle": ([0.26, 0.50, 0.82], [0.74, 0.85, 0.88], [0.28, 0.32, 0.24]),          # a clear green-tinged day
+    "militia_hdr": ([0.27, 0.37, 0.60], [0.86, 0.72, 0.62], [0.30, 0.29, 0.27]),     # a clear dusk
+}
+
+PRECIP_RAIN = (0, 4)   # func_precipitation's preciptype: 0 and 4 rain; 1, 3 and 6 snow; 2 and 5 ash (drawn as snow)
+
+
+def _colour3(s):
+    return [round(max(0.0, min(1.0, float(c) / 255.0)), 3) for c in s.split()[:3]]
+
+
+def model_bounds(bsp, index):
+    """A brush model's bounding box in the document's axes, metres: ([x0, y0, z0], [x1, y1, z1]), or None."""
+    lo = [1e9, 1e9, 1e9]
+    hi = [-1e9, -1e9, -1e9]
+    for bi in bsp.model_brushes(index):
+        for (x0, x1), (y0, y1), (z0, z1), _phi in brush_boxes(bsp, bi)[0]:
+            lo = [min(lo[0], x0 * S), min(lo[1], z0 * S), min(lo[2], -y1 * S)]
+            hi = [max(hi[0], x1 * S), max(hi[1], z1 * S), max(hi[2], -y0 * S)]
+    return None if lo[0] > hi[0] else (lo, hi)
+
+
+def environment(bsp, fog_override=None):
+    """The author's atmosphere: {"env": the document's environment fields, "weather": volumes in the
+    document's axes before the origin shift (or None), "lights": extra lamps [(x, y, z, energy, colour)]}.
+
+    Sun: the first light_environment's colour, brightness and angles (Source's yaw less 90 is godot's; pitch is
+    the same sign), kept between 8 and 80 degrees so a sun never lies along the floor nor straight down.
+    Ambient: its colour and brightness, as the colour of the shade (the game mixes it a quarter into its grey)
+    and an energy 0.42 to 0.62. Fog: the controller's colour, start and end in metres, and its density cap."""
+    world = next((e for e in bsp.entities if e.get("classname") == "worldspawn"), {})
+    sky = str(world.get("skyname", "")).lower()
+    top, horizon, ground = SKY_MOODS.get(sky, ([0.32, 0.52, 0.82], [0.72, 0.82, 0.92], [0.35, 0.33, 0.30]))
+    env = {}
+    sun = next((e for e in bsp.entities if e.get("classname") == "light_environment"), None)
+    if sun is not None:
+        c = vec(sun.get("_light", "255 255 255 200"))
+        ang = vec(sun.get("angles", "0 0 0"))
+        pitch = float(sun.get("pitch", ang[0]))
+        env["sun_colour"] = [round(v / 255.0, 3) for v in c[:3]]
+        env["sun_energy"] = round(max(0.6, min(1.0, math.sqrt(c[3] / 400.0) * 0.95)), 2)
+        env["sun_pitch"] = -round(max(8.0, min(80.0, abs(pitch))))
+        env["sun_yaw"] = round((ang[1] - 90.0) % 360.0)
+        a = vec(sun.get("_ambient", "180 190 200 200"))
+        env["ambient"] = [round(v / 255.0, 3) for v in a[:3]]
+        env["ambient_energy"] = round(max(0.42, min(0.62, 0.30 + a[3] / 1000.0)), 2)
+    fog = next((e for e in bsp.entities if e.get("classname") == "env_fog_controller" and str(e.get("fogenable", "1")) != "0"), None)
+    if fog is not None:
+        env["fog_colour"] = _colour3(fog.get("fogcolor", "180 190 200"))
+        env["fog_start"] = round(float(fog.get("fogstart", 0)) * S, 1)
+        env["fog_end"] = round(float(fog.get("fogend", 1000)) * S, 1)
+        env["fog_max"] = round(float(fog.get("fogmaxdensity", 1.0)), 2)
+    if fog_override:
+        env["fog_start"], env["fog_end"], env["fog_max"] = fog_override
+        env.setdefault("fog_colour", [0.7, 0.74, 0.78])
+    if "fog_colour" in env:
+        horizon = env["fog_colour"]
+    env["sky_top"], env["sky_horizon"], env["ground"] = [round(v, 3) for v in top], [round(v, 3) for v in horizon], ground
+
+    volumes = []
+    kind = "snow"
+    for e in bsp.entities:
+        if e.get("classname") != "func_precipitation" or not str(e.get("model", "")).startswith("*"):
+            continue
+        b = model_bounds(bsp, int(e["model"][1:]))
+        if b is None:
+            continue
+        kind = "rain" if int(float(e.get("preciptype", 0))) in PRECIP_RAIN else "snow"
+        # The author stacks copies of one brush to thicken the fall; the document asks for density instead.
+        if not any(v == b for v in volumes):
+            volumes.append(b)
+    lights = []
+    for e in bsp.entities:
+        cls = e.get("classname")
+        if cls in ("point_spotlight", "env_fire"):
+            gx, gy, gz = gd(vec(e["origin"]))
+            spot = cls == "point_spotlight"
+            lights.append((gx, gy - 0.4 if spot else gy + 0.3, gz, 0.9 if spot else 1.1,
+                           _colour3(e["rendercolor"]) if spot and e.get("rendercolor") else [1.0, 0.62, 0.28]))
+    return {"env": env, "weather": {"kind": kind, "volumes": volumes} if volumes else None, "lights": lights}
+
+
+def weather_block(weather, shift, seed=1):
+    """The document's `weather` (a dot-weather document) from environment()'s volumes, shifted with the map."""
+    ox, oy, oz = shift
+    vols = []
+    for lo, hi in weather["volumes"]:
+        vols.append({"min": [round(lo[0] - ox, 2), round(lo[1] - oy, 2), round(lo[2] - oz, 2)],
+                     "max": [round(hi[0] - ox, 2), round(hi[1] - oy, 2), round(hi[2] - oz, 2)]})
+    colour = [1.0, 1.0, 1.0] if weather["kind"] == "snow" else [0.78, 0.84, 0.95]
+    return {"seed": seed, "precipitation": {"kind": weather["kind"], "density": 1.6, "colour": colour, "volumes": vols}}
+
+
+def patch_environment(bsp, path, fog_override=None, ambience=None):
+    """--env-only: put the environment into a finished document and touch nothing else (a hand-edited map)."""
+    with open(path) as f:
+        doc = json.load(f)
+    doc["environment"].update(environment(bsp, fog_override)["env"])
+    if ambience:
+        doc.update(ambience)
+    with open(path, "w") as f:
+        f.write(json.dumps(doc, indent=1) + "\n")
+    print("environment patched into", path)
+
+
 def main(argv):
     args = [a for a in argv[1:] if not a.startswith("--")]
     out_path = None
@@ -638,9 +775,21 @@ def main(argv):
     drop_kinds = []
     thin = {}
     terrain = ""
+    fog_override = None
+    ambience = {}
+    env_only = ""
     for a in argv[1:]:
         if a.startswith("--out="):
             out_path = a[6:]
+        elif a.startswith("--fog="):
+            fog_override = tuple(float(t) for t in a[6:].split(","))
+        elif a.startswith("--ambience="):
+            beds = a[11:].split(",")
+            ambience["ambience"] = beds[0]
+            if len(beds) > 1:
+                ambience["ambience_indoor"] = beds[1]
+        elif a.startswith("--env-only="):
+            env_only = a[11:]
         elif a.startswith("--cover="):
             cover = int(a[8:])
         elif a.startswith("--cover-gap="):
@@ -690,6 +839,9 @@ def main(argv):
         elif a.startswith("--drop-beside="):
             t = a[14:].split(",")
             drops.append((float(t[0]), float(t[1]), t[2] if len(t) > 2 else ""))
+    if env_only:
+        patch_environment(bsp_read.Bsp(args[0]).load(), env_only, fog_override, ambience)
+        return
     bsp_path, mid, name, author, url = args[:5]
     bsp = bsp_read.Bsp(bsp_path).load()
     m = build_maps.Map(
@@ -697,6 +849,10 @@ def main(argv):
         dict(build_maps.DUSK) if dusk else {"sky_top": [0.32, 0.52, 0.82], "sky_horizon": [0.72, 0.82, 0.92], "ground": [0.35, 0.33, 0.30],
          "sun_pitch": -55, "sun_yaw": 30, "sun_energy": 1.0, "ambient": [0.62, 0.66, 0.72], "ambient_energy": 0.5},
         kill_y=-20.0)
+    atmosphere = environment(bsp, fog_override)
+    m.doc["environment"].update(atmosphere["env"])
+    m.doc["environment"].pop("fog", None)
+    m.doc.update(ambience)
     m.doc["author"] = author
     m.doc.update(fields)
     m.doc["source"] = url
@@ -752,6 +908,7 @@ def main(argv):
     print("brushes %d  tool-only %d  sliced %d  boxes %d" % (len(bsp.model_brushes(0)), skipped, sliced, len(m.boxes)))
 
     docboxes.drop_door_leaves(m.boxes)
+    print("ceilings: %d floor-tiled skins retextured" % retexture_ceilings(m.boxes))
     docboxes.prune_far_scenery(m.boxes, [gd(vec(e["origin"])) for e in bsp.entities if e.get("classname") in START_CLASSES])
 
     # Props: sit on the highest solid box under the footprint when one is within reach of the
@@ -800,6 +957,7 @@ def main(argv):
             lights.append((gx, gy, gz, min(1.2, c[3] / 200.0), [c[0] / 255, c[1] / 255, c[2] / 255]))
     # A map documents at most 128 lights and a browser draws 8 a surface: keep the author's lights at least
     # `gap` metres apart, widening the gap until they fit, each kept one a little stronger for those it stood for.
+    lights += [(gx, gy, gz, en, col) for gx, gy, gz, en, col in atmosphere["lights"]]
     kept_l, gap = dlights.thin_by_gap(lights, max_lights)
     for gx, gy, gz, en, col in kept_l:
         m.light(gx, gy, gz, rng=9.0 + gap, energy=dlights.strengthen(en, gap), colour=col)
@@ -912,6 +1070,9 @@ def main(argv):
                     shift(v)
         for key in ("boxes", "props", "lights", "spawns", "toys", "doors"):
             shift(doc.get(key))
+    if atmosphere["weather"] is not None:
+        doc["weather"] = weather_block(atmosphere["weather"], (ox, oy, oz))
+        print("weather: %s over %d volumes" % (atmosphere["weather"]["kind"], len(atmosphere["weather"]["volumes"])))
     # A start far below the rest is another area of the author's (a pit, a sealed cellar the conversion has no floor for).
     ysp = sorted(sp["at"][1] for sp in doc["spawns"]["players"])
     low = [sp for sp in doc["spawns"]["players"] if sp["at"][1] < ysp[len(ysp) // 2] - 8.0]

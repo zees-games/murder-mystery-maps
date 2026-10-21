@@ -7,37 +7,38 @@
  "blurb": "Converted from mu_office.bsp by Kammorne (https://steamcommunity.com/sharedfiles/filedetails/?id=275775110).",
  "environment": {
   "sky_top": [
-   0.3,
-   0.34,
-   0.58
+   0.46,
+   0.53,
+   0.65
   ],
   "sky_horizon": [
-   0.92,
    0.66,
-   0.52
+   0.7,
+   0.76
   ],
   "ground": [
    0.3,
-   0.3,
-   0.27
+   0.31,
+   0.32
   ],
-  "sun_pitch": -14,
-  "sun_yaw": 235,
-  "sun_energy": 0.8,
+  "sun_pitch": -60,
+  "sun_yaw": 270,
+  "sun_energy": 0.86,
   "sun_colour": [
    1.0,
-   0.76,
-   0.56
+   0.976,
+   0.882
   ],
   "ambient": [
-   0.58,
-   0.58,
-   0.7
+   0.475,
+   0.596,
+   0.725
   ],
-  "ambient_energy": 0.46,
-  "fog": 0.0012
+  "ambient_energy": 0.62
  },
  "kill_y": -20.0,
+ "ambience": "amb_indoor",
+ "ambience_indoor": "amb_indoor",
  "source": "https://steamcommunity.com/sharedfiles/filedetails/?id=275775110",
  "boxes": [
   {

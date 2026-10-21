@@ -38,6 +38,9 @@ Every length is metres, every angle degrees, every time seconds. A position is `
 - `round_seconds`: how long this map's rounds last; 0 is the server's own, and the server's is always the ceiling.
 - `kill_y`: anybody below it has fallen. Put it under anything a player could fall off.
 - `environment`: every field is optional. `fog` is a density; 0.0025 is a light haze over a big outdoor map, and 0.008 already hides everything past forty metres. The shipped maps are dusk but readable: keep `ambient_energy` near 0.45 and fog under 0.002.
+- `environment` may also carry the map's own fog, in metres: `fog_colour`, `fog_start`, `fog_end` and `fog_max` (the most opaque it gets, 0 to 1), which replaces the haze every map has by default and is written through dot-lighting. The horizon `sky_horizon` should be the fog's colour, since distance fades into the sky. `ambient` tints the shade a quarter of the way.
+- `weather` (optional): a dot-weather document (`{"seed": 1, "precipitation": {"kind": "snow", "density": 1.6, "colour": [1, 1, 1], "volumes": [{"min": [x, y, z], "max": [x, y, z]}]}}`), drawn by dot-fx in those boxes only, so nothing falls indoors. It is parsed by dot-weather's own rules; an unknown key refuses the map.
+- `ambience` (optional): the bed under the map outdoors, and `ambience_indoor` the one under any ceiling. One of dot-audio's stock beds (all CC0): `amb_wind`, `amb_outdoor`, `amb_night`, `amb_city`, `amb_indoor`, `amb_eerie`, `amb_industrial`, `amb_cave`, `amb_rain`.
 
 ## Boxes
 

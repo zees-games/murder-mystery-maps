@@ -7,37 +7,46 @@
  "blurb": "Converted from mu_hotel.bsp by Neo_Wesker (https://gamebanana.com/maps/206520).",
  "environment": {
   "sky_top": [
-   0.3,
-   0.34,
-   0.58
+   0.27,
+   0.37,
+   0.6
   ],
   "sky_horizon": [
-   0.92,
-   0.66,
-   0.52
+   0.463,
+   0.549,
+   0.608
   ],
   "ground": [
    0.3,
-   0.3,
+   0.29,
    0.27
   ],
-  "sun_pitch": -14,
-  "sun_yaw": 235,
-  "sun_energy": 0.8,
+  "sun_pitch": -80,
+  "sun_yaw": 256,
+  "sun_energy": 0.95,
   "sun_colour": [
    1.0,
-   0.76,
-   0.56
+   0.902,
+   0.769
   ],
   "ambient": [
-   0.58,
-   0.58,
-   0.7
+   0.718,
+   0.824,
+   1.0
   ],
-  "ambient_energy": 0.46,
-  "fog": 0.0012
+  "ambient_energy": 0.42,
+  "fog_colour": [
+   0.463,
+   0.549,
+   0.608
+  ],
+  "fog_start": 6.1,
+  "fog_end": 142.9,
+  "fog_max": 0.5
  },
  "kill_y": -20.0,
+ "ambience": "amb_wind",
+ "ambience_indoor": "amb_indoor",
  "source": "https://gamebanana.com/maps/206520",
  "boxes": [
   {
@@ -958,7 +967,7 @@
     0.038,
     0.61
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -1388,7 +1397,7 @@
     0.038,
     0.61
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2215,7 +2224,7 @@
     0.019,
     4.267
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2228,7 +2237,7 @@
     0.019,
     4.267
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2241,7 +2250,7 @@
     0.019,
     1.524
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2254,7 +2263,7 @@
     0.019,
     1.524
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2267,7 +2276,7 @@
     0.019,
     4.267
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2280,7 +2289,7 @@
     0.019,
     4.267
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2293,7 +2302,7 @@
     0.019,
     1.524
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2306,7 +2315,7 @@
     0.019,
     1.524
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2319,7 +2328,7 @@
     0.019,
     4.267
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2332,7 +2341,7 @@
     0.019,
     4.267
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2345,7 +2354,7 @@
     0.019,
     1.524
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -2358,7 +2367,7 @@
     0.019,
     1.524
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -3388,7 +3397,7 @@
     0.019,
     1.695
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -3414,7 +3423,7 @@
     0.019,
     2.8
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -3742,7 +3751,7 @@
     0.019,
     1.41
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -3781,7 +3790,7 @@
     0.019,
     3.277
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -3794,7 +3803,7 @@
     0.019,
     0.61
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -3807,7 +3816,7 @@
     0.019,
     0.61
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -3820,7 +3829,7 @@
     0.019,
     0.61
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -4425,7 +4434,7 @@
     0.019,
     3.81
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -4451,7 +4460,7 @@
     0.019,
     3.048
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -6608,7 +6617,7 @@
     0.019,
     1.334
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -6621,7 +6630,7 @@
     0.019,
     0.819
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -6634,7 +6643,7 @@
     0.019,
     0.629
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -6647,7 +6656,7 @@
     0.019,
     0.629
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
@@ -6660,7 +6669,7 @@
     0.019,
     0.819
    ],
-   "mat": "tile_floor"
+   "mat": "ceiling"
   },
   {
    "at": [
