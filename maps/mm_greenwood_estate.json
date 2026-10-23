@@ -8394,7 +8394,12 @@
     0.076,
     1.486
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8407,7 +8412,12 @@
     0.076,
     1.486
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8420,7 +8430,12 @@
     0.076,
     1.486
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8433,7 +8448,12 @@
     0.133,
     0.229
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8446,7 +8466,12 @@
     0.133,
     0.457
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8459,7 +8484,12 @@
     0.076,
     0.457
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8524,7 +8554,12 @@
     0.133,
     0.229
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8537,7 +8572,12 @@
     0.076,
     0.457
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8550,7 +8590,12 @@
     0.133,
     0.457
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8563,7 +8608,12 @@
     0.133,
     0.229
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8576,7 +8626,12 @@
     0.076,
     1.486
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8589,7 +8644,12 @@
     0.076,
     1.486
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8602,7 +8662,12 @@
     0.076,
     1.486
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8615,7 +8680,12 @@
     0.076,
     0.457
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8667,7 +8737,12 @@
     0.076,
     0.457
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8693,7 +8768,12 @@
     0.133,
     0.229
    ],
-   "mat": "carpet_red"
+   "mat": "carpet",
+   "tint": [
+    0.8,
+    0.5,
+    0.46
+   ]
   },
   {
    "at": [
@@ -8706,7 +8786,7 @@
     0.152,
     3.658
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8719,7 +8799,7 @@
     0.152,
     0.533
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8732,7 +8812,7 @@
     0.152,
     0.533
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8745,7 +8825,7 @@
     0.152,
     0.533
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8758,7 +8838,7 @@
     0.152,
     0.533
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8771,7 +8851,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8784,7 +8864,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8797,7 +8877,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8810,7 +8890,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8823,7 +8903,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8836,7 +8916,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8849,7 +8929,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8862,7 +8942,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8875,7 +8955,7 @@
     0.152,
     0.381
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8888,7 +8968,7 @@
     0.152,
     0.381
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8901,7 +8981,7 @@
     0.152,
     10.363
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8914,7 +8994,7 @@
     0.152,
     3.658
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8927,7 +9007,7 @@
     0.152,
     0.267
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8940,7 +9020,7 @@
     0.152,
     0.8
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8953,7 +9033,7 @@
     0.152,
     0.152
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8966,7 +9046,7 @@
     0.152,
     3.658
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8979,7 +9059,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -8992,7 +9072,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9005,7 +9085,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9018,7 +9098,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9031,7 +9111,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9044,7 +9124,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9057,7 +9137,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9070,7 +9150,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9083,7 +9163,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9096,7 +9176,7 @@
     0.152,
     0.152
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9395,7 +9475,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9408,7 +9488,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9421,7 +9501,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9434,7 +9514,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9447,7 +9527,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9460,7 +9540,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9473,7 +9553,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9486,7 +9566,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9720,7 +9800,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9733,7 +9813,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9746,7 +9826,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9759,7 +9839,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9772,7 +9852,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9785,7 +9865,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9798,7 +9878,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9811,7 +9891,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9824,7 +9904,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -9837,7 +9917,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_clay"
+   "mat": "roof_tiles"
   },
   {
    "at": [
@@ -12321,8 +12401,8 @@
   ],
   "base": -2.5137,
   "step": 0.05,
-  "bytes": 2114,
-  "data": "eNqtVctNBDEMtTM7sMCJCvZCARSABBIFcKEN+uDGhUI4c9kKEBUgWlgOwCBmxiRxPnays9rVEilOJnH8ffYQTY/lx8L0D013CXb0gnb/SleV/PV0tZFuadvCkqfunTaNR9hv4ATN636DCCvK0t2KBe/+eqLlLB0LjqiBV/01FRuWjGnNukzxciQ33XBr3MkJRWwx2GgsNdBbiYOS6nZLerFnLcwsh7FnAw30Q6/kXtzDHLQVRM90A+dw6CVHP93u1NvXVP4ewYHVPJLOQwsn8EWa08lpvIf61NgzrHIZI1bGFKF8D96vOqNmh+ybSUzsiqFtxi1c+JyVr4/hm2qPuVKZX7/p7ZtZqgYZkZ6aNfzg8YGVfKbG58aEGKPAuctbY9eRcpUbYHzKSuyFdIkfjnCbrCLCgDue6LFpoKN5sst4Prbjl1rPxVjPelFFHRWeQNQzhmrTeWZpo+onqFCao+p4nf1cpVEnwrXF+ZW/oXAX+e+SNSb4kvVo2bKTcSQQPq0GZ4ObZ8CrzBWEKLiMjraiY3caSXYaGclYYWOqVaepsfMtSUPR5TBlMX6VU3e4+EeBtIcClVE2Bkxjkm+qvpnxh2t6b/ZfRxFErLH4S0gsyhvpNypNpR8If1cq97g=",
+  "bytes": 2152,
+  "data": "eNqtVUtOw0AMtScN5bOCA4CEOAA3qARbJI7EJTgNG5Zs2HAAxAmQuuCTqkke883Yk6ZSVUaKPcl4/H12gG3r4hwf82ZBdrWCNv9K2wdBF9N0uZXu4Nuy2Ro0Hmm/xRM08/0WwCMatDvOhez+dpLnQTsXEslC4PptKjdBMw882zLFzR7uccvxtJMPFbnl6KOx1Hhu4lmvtLvdM2rPX1BRZeVqmnl5og4dVljj1Z44PSt84Zi0d8AT7uma5t5iit/tTr3f1SgPR3RALXro+tR0Qj/Qkk5P5SPXX439xqMap0yWuWYq75OPblxpswMqzCRWdsVWuW7obqP0G85oiR7juHtblV+MIw+dHCqvb7X21mzoFpmZ1td63KUdTPEtdVqoR7DDql9C/SrLe+QpYCjgV3ZqK7RLHIVM14NXTqMRyGePVEMNDge/jJcLfqw9tlMvZLusss8KVyT6nWM36noHbb2aN6zQmrPqZJ3/oYuTTUdvLeJr+oQ7RTzPGVgj+WRiRNmatiDnHcdO/0Zr+w9+VlxFLit2aasfNHT2rEOaYT3kPJL55GF+JD+dJTcv3kEqs3lW5knJGx49B9N/h4Y9FdhMujkimwf9ZjRdMwp5w4TG4LHOIolcc/EvkYiUJzJuVpbKOJj+ADQ4CDs=",
   "mat": "grass",
   "tint": [
    0.85,

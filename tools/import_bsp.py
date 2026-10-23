@@ -81,6 +81,19 @@ TOOLS = ("TOOLS/", "tools/")
 # conversion reads; a new texture goes there, never into this file. `bsp.py unmapped <bsp>` lists what it misses.
 TEXTURE_MAP = texturemap.load()
 
+# Shared ids this game's mm_materials.gd has no surface for (it would draw as flat grey), and what stands in.
+GAME_SURFACE = {
+    "roof_clay": ("roof_tiles", None),
+    "carpet_red": ("carpet", (0.8, 0.5, 0.46)),
+    "carpet_blue": ("carpet", (0.62, 0.70, 0.86)),
+    "carpet_grey": ("carpet", (0.75, 0.75, 0.75)),
+    "carpet_pattern": ("carpet", None),
+    "ceiling_tile": ("ceiling", None),
+    "rock": ("stone_wall", None),
+    "wallpaper_decrepit": ("plaster_worn", None),
+    "glass_frosted": ("glass", None),
+}
+
 # HL2 model -> catalogue id. Pieces with no counterpart in the catalogue are left out.
 PROP_MAP = {
     "furniture_lamp01a": "furniture_lamp_round_table",
@@ -883,6 +896,8 @@ def main(argv):
     for bi in sorted(bsp.model_brushes(0)):
         names = docboxes.brush_material_names(bsp, bi)
         mt = docboxes.majority_material(names, TEXTURE_MAP, ("flat", None))
+        if mt is not None and mt[0] in GAME_SURFACE:
+            mt = GAME_SURFACE[mt[0]] if mt[1] is None else (GAME_SURFACE[mt[0]][0], mt[1])
         invisible = False
         if mt is None:
             # The author's sky box is the map's wall: solid to a player, drawn as nothing.
