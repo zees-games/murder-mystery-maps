@@ -51,5 +51,7 @@ python3 tools/build_maps.py --sync-sizes   # copy prop sizes from ../game-murder
 
 The props are Kenney's CC0 Furniture and Nature kits, which the game provides.
 
+Ground that is a displacement in the source map is a `terrain` heightfield (dot-map's `dotbsp.terrain`, read by `DotMapTerrain`), not stepped boxes: `import_bsp.py` writes it, and `--graft-terrain=<map.json>` swaps it into a committed map while keeping every other box, prop and hand edit. `mm_factory_winter` is the one map that has it.
+
 ## License
 MIT. See [LICENSE](LICENSE).
