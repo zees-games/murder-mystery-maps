@@ -1,0 +1,68 @@
+{
+    "schema": 1,
+    "title": "Murder Mystery maps",
+    "kinds": [
+        "map"
+    ],
+    "games": [
+        "gamemann/game-murder-mystery"
+    ],
+    "entries": [
+        {
+            "kind": "map",
+            "id": "mm_factory_winter",
+            "name": "Factory Winter",
+            "scene": "maps/mm_factory_winter.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_greenwood_estate",
+            "name": "Greenwood Estate",
+            "scene": "maps/mm_greenwood_estate.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_mansion",
+            "name": "Blackwood Mansion",
+            "scene": "maps/mm_mansion.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_motel",
+            "name": "Lonely Pines Motel",
+            "scene": "maps/mm_motel.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_mu_hotel",
+            "name": "Hotel",
+            "scene": "maps/mm_mu_hotel.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_office_murder",
+            "name": "Office",
+            "scene": "maps/mm_office_murder.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_open_yard",
+            "name": "Open Yard",
+            "scene": "maps/mm_open_yard.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_silence_hollow",
+            "name": "Hollow Hill",
+            "scene": "maps/mm_silence_hollow.json",
+            "map_kind": "murder"
+        }
+    ]
+}
