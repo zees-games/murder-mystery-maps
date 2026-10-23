@@ -8394,12 +8394,7 @@
     0.076,
     1.486
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8412,12 +8407,7 @@
     0.076,
     1.486
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8430,12 +8420,7 @@
     0.076,
     1.486
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8448,12 +8433,7 @@
     0.133,
     0.229
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8466,12 +8446,7 @@
     0.133,
     0.457
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8484,12 +8459,7 @@
     0.076,
     0.457
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8554,12 +8524,7 @@
     0.133,
     0.229
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8572,12 +8537,7 @@
     0.076,
     0.457
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8590,12 +8550,7 @@
     0.133,
     0.457
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8608,12 +8563,7 @@
     0.133,
     0.229
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8626,12 +8576,7 @@
     0.076,
     1.486
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8644,12 +8589,7 @@
     0.076,
     1.486
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8662,12 +8602,7 @@
     0.076,
     1.486
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8680,12 +8615,7 @@
     0.076,
     0.457
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8737,12 +8667,7 @@
     0.076,
     0.457
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8768,12 +8693,7 @@
     0.133,
     0.229
    ],
-   "mat": "carpet",
-   "tint": [
-    0.8,
-    0.5,
-    0.46
-   ]
+   "mat": "carpet_red"
   },
   {
    "at": [
@@ -8786,7 +8706,7 @@
     0.152,
     3.658
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8799,7 +8719,7 @@
     0.152,
     0.533
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8812,7 +8732,7 @@
     0.152,
     0.533
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8825,7 +8745,7 @@
     0.152,
     0.533
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8838,7 +8758,7 @@
     0.152,
     0.533
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8851,7 +8771,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8864,7 +8784,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8877,7 +8797,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8890,7 +8810,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8903,7 +8823,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8916,7 +8836,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8929,7 +8849,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8942,7 +8862,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8955,7 +8875,7 @@
     0.152,
     0.381
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8968,7 +8888,7 @@
     0.152,
     0.381
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8981,7 +8901,7 @@
     0.152,
     10.363
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -8994,7 +8914,7 @@
     0.152,
     3.658
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9007,7 +8927,7 @@
     0.152,
     0.267
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9020,7 +8940,7 @@
     0.152,
     0.8
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9033,7 +8953,7 @@
     0.152,
     0.152
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9046,7 +8966,7 @@
     0.152,
     3.658
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9059,7 +8979,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9072,7 +8992,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9085,7 +9005,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9098,7 +9018,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9111,7 +9031,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9124,7 +9044,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9137,7 +9057,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9150,7 +9070,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9163,7 +9083,7 @@
     0.152,
     0.491
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9176,7 +9096,7 @@
     0.152,
     0.152
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9475,7 +9395,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9488,7 +9408,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9501,7 +9421,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9514,7 +9434,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9527,7 +9447,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9540,7 +9460,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9553,7 +9473,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9566,7 +9486,7 @@
     0.152,
     0.476
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9800,7 +9720,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9813,7 +9733,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9826,7 +9746,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9839,7 +9759,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9852,7 +9772,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9865,7 +9785,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9878,7 +9798,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9891,7 +9811,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9904,7 +9824,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -9917,7 +9837,7 @@
     0.152,
     0.503
    ],
-   "mat": "roof_tiles"
+   "mat": "roof_clay"
   },
   {
    "at": [
@@ -10610,207 +10530,212 @@
    "yaw": 180.0
   },
   {
-   "id": "furniture_trashcan",
+   "id": "furniture_potted_plant",
    "at": [
-    -17.694,
+    6.001,
     0.0,
-    -15.584
-   ]
-  },
-  {
-   "id": "furniture_trashcan",
-   "at": [
-    -10.194,
-    0.0,
-    8.416
+    9.916
    ],
    "yaw": 180.0
   },
   {
-   "id": "furniture_trashcan",
-   "at": [
-    -10.194,
-    0.0,
-    -15.584
-   ]
-  },
-  {
-   "id": "furniture_potted_plant",
-   "at": [
-    7.806,
-    0.0,
-    8.416
-   ],
-   "yaw": 270.0
-  },
-  {
    "id": "furniture_plant_small2",
    "at": [
-    12.306,
-    0.0,
-    -5.084
-   ],
-   "yaw": 90.0
-  },
-  {
-   "id": "furniture_potted_plant",
-   "at": [
-    10.806,
-    0.0,
-    -15.584
-   ],
-   "yaw": 180.0
-  },
-  {
-   "id": "furniture_bookcase_closed_wide",
-   "at": [
-    0.306,
-    0.0,
-    -20.084
-   ],
-   "yaw": 90.0
-  },
-  {
-   "id": "furniture_potted_plant",
-   "at": [
-    -10.194,
-    0.0,
-    -11.084
-   ]
-  },
-  {
-   "id": "furniture_plant_small2",
-   "at": [
-    -16.194,
+    -17.999,
     0.0,
     -9.584
-   ]
-  },
-  {
-   "id": "furniture_lounge_sofa",
-   "at": [
-    9.306,
-    0.0,
-    0.916
-   ]
-  },
-  {
-   "id": "furniture_bookcase_closed_wide",
-   "at": [
-    -13.194,
-    0.0,
-    -5.084
-   ],
-   "yaw": 90.0
-  },
-  {
-   "id": "furniture_plant_small2",
-   "at": [
-    -17.694,
-    0.0,
-    8.416
-   ],
-   "yaw": 180.0
-  },
-  {
-   "id": "furniture_potted_plant",
-   "at": [
-    -20.694,
-    0.0,
-    -5.084
-   ]
-  },
-  {
-   "id": "furniture_plant_small2",
-   "at": [
-    7.806,
-    0.0,
-    -11.084
-   ]
-  },
-  {
-   "id": "furniture_potted_plant",
-   "at": [
-    7.806,
-    0.0,
-    -18.584
-   ],
-   "yaw": 90.0
-  },
-  {
-   "id": "furniture_trashcan",
-   "at": [
-    -5.694,
-    0.0,
-    -15.584
-   ],
-   "yaw": 180.0
-  },
-  {
-   "id": "furniture_potted_plant",
-   "at": [
-    4.806,
-    0.0,
-    12.916
    ],
    "yaw": 270.0
   },
   {
    "id": "furniture_bookcase_closed_wide",
    "at": [
-    -19.194,
+    -7.499,
     0.0,
-    0.916
-   ]
+    9.916
+   ],
+   "yaw": 180.0
   },
   {
    "id": "furniture_coat_rack_standing",
    "at": [
-    -5.694,
+    10.501,
     0.0,
-    -20.084
+    -12.584
+   ],
+   "yaw": 180.0
+  },
+  {
+   "id": "furniture_bookcase_closed_wide",
+   "at": [
+    -17.999,
+    0.0,
+    -3.584
    ],
    "yaw": 270.0
+  },
+  {
+   "id": "furniture_bookcase_closed_wide",
+   "at": [
+    -14.999,
+    0.0,
+    -6.584
+   ],
+   "yaw": 90.0
+  },
+  {
+   "id": "furniture_coat_rack_standing",
+   "at": [
+    -1.499,
+    0.0,
+    11.416
+   ],
+   "yaw": 90.0
+  },
+  {
+   "id": "furniture_lounge_sofa",
+   "at": [
+    -16.499,
+    0.0,
+    8.416
+   ],
+   "yaw": 90.0
   },
   {
    "id": "furniture_potted_plant",
    "at": [
-    12.306,
+    6.001,
     0.0,
-    11.416
+    -20.084
    ],
-   "yaw": 270.0
+   "yaw": 90.0
+  },
+  {
+   "id": "furniture_plant_small2",
+   "at": [
+    -11.999,
+    0.0,
+    8.416
+   ],
+   "yaw": 180.0
+  },
+  {
+   "id": "furniture_potted_plant",
+   "at": [
+    -17.999,
+    0.0,
+    -20.084
+   ]
   },
   {
    "id": "furniture_trashcan",
    "at": [
-    -7.194,
-    0.61,
-    -8.084
+    12.001,
+    0.0,
+    0.916
    ],
    "yaw": 90.0
   },
   {
    "id": "furniture_plant_small1",
    "at": [
-    1.806,
-    0.61,
-    -5.084
-   ]
-  },
-  {
-   "id": "furniture_coat_rack_standing",
-   "at": [
-    -1.194,
-    0.61,
-    6.916
+    -5.999,
+    0.0,
+    5.416
    ],
    "yaw": 270.0
   },
   {
    "id": "furniture_plant_small2",
    "at": [
-    -1.194,
+    -5.999,
+    0.0,
+    -18.584
+   ],
+   "yaw": 180.0
+  },
+  {
+   "id": "furniture_bookcase_closed_wide",
+   "at": [
+    -10.499,
+    0.0,
+    -9.584
+   ],
+   "yaw": 270.0
+  },
+  {
+   "id": "furniture_coat_rack_standing",
+   "at": [
+    13.501,
+    0.0,
+    11.416
+   ],
+   "yaw": 270.0
+  },
+  {
+   "id": "furniture_lounge_sofa",
+   "at": [
+    7.501,
+    0.0,
+    -2.084
+   ],
+   "yaw": 270.0
+  },
+  {
+   "id": "furniture_lounge_sofa",
+   "at": [
+    -19.499,
+    0.0,
+    11.416
+   ]
+  },
+  {
+   "id": "furniture_potted_plant",
+   "at": [
+    12.001,
+    0.0,
+    -3.584
+   ],
+   "yaw": 180.0
+  },
+  {
+   "id": "furniture_potted_plant",
+   "at": [
+    10.501,
+    0.0,
+    -20.084
+   ],
+   "yaw": 180.0
+  },
+  {
+   "id": "furniture_potted_plant",
+   "at": [
+    -1.499,
+    0.61,
+    -6.584
+   ]
+  },
+  {
+   "id": "furniture_plant_small2",
+   "at": [
+    1.501,
+    0.61,
+    -3.584
+   ],
+   "yaw": 180.0
+  },
+  {
+   "id": "furniture_potted_plant",
+   "at": [
+    -1.499,
+    0.61,
+    6.916
+   ]
+  },
+  {
+   "id": "furniture_plant_small2",
+   "at": [
+    -1.499,
     3.05,
     -3.584
    ],
@@ -10965,15 +10890,6 @@
    "yaw": 90.0
   },
   {
-   "id": "furniture_bookcase_open",
-   "at": [
-    1.333,
-    -2.44,
-    5.159
-   ],
-   "yaw": 180.0
-  },
-  {
    "id": "furniture_bookcase_open_low",
    "at": [
     4.397,
@@ -11010,30 +10926,12 @@
    "yaw": -90.0
   },
   {
-   "id": "furniture_washer",
-   "at": [
-    3.169,
-    -2.44,
-    0.26
-   ],
-   "yaw": -90.0
-  },
-  {
    "id": "furniture_cabinet_bed_drawer",
    "at": [
     -2.87,
     3.05,
     -5.197
    ]
-  },
-  {
-   "id": "furniture_bench",
-   "at": [
-    -0.68,
-    -2.44,
-    5.216
-   ],
-   "yaw": 180.0
   },
   {
    "id": "furniture_bed_single",
@@ -11148,83 +11046,66 @@
    "yaw": 90.0
   },
   {
-   "id": "furniture_bookcase_closed_wide",
-   "at": [
-    3.573,
-    0.61,
-    -8.665
-   ]
-  },
-  {
-   "id": "furniture_washer",
-   "at": [
-    3.169,
-    -2.44,
-    3.625
-   ],
-   "yaw": -90.0
-  },
-  {
-   "id": "furniture_coat_rack_standing",
-   "at": [
-    0.427,
-    0.61,
-    0.104
-   ],
-   "yaw": 180.0
-  },
-  {
-   "id": "furniture_bed_single",
-   "at": [
-    3.891,
-    3.05,
-    -7.658
-   ]
-  },
-  {
    "id": "furniture_bookcase_open_low",
    "at": [
-    -9.32,
+    -9.317,
     -2.44,
     -5.814
    ],
    "yaw": 180.0
   },
   {
-   "id": "furniture_side_table_drawers",
-   "at": [
-    0.771,
-    3.05,
-    -2.585
-   ],
-   "yaw": -90.0
-  },
-  {
-   "id": "furniture_washer",
-   "at": [
-    3.169,
-    -2.44,
-    -3.77
-   ],
-   "yaw": -90.0
-  },
-  {
    "id": "furniture_bookcase_open_low",
    "at": [
-    3.33,
+    -3.33,
     -2.44,
-    1.959
-   ],
-   "yaw": -90.0
-  },
-  {
-   "id": "furniture_potted_plant",
-   "at": [
-    -3.188,
-    0.61,
-    -0.009
+    -2.458
    ],
    "yaw": 90.0
+  },
+  {
+   "id": "furniture_cardboard_box_closed",
+   "at": [
+    -3.373,
+    -2.44,
+    -1.028
+   ],
+   "yaw": 90.0
+  },
+  {
+   "id": "furniture_lamp_square_floor",
+   "at": [
+    -3.328,
+    0.61,
+    -0.065
+   ],
+   "yaw": 90.0
+  },
+  {
+   "id": "furniture_coat_rack_standing",
+   "at": [
+    0.321,
+    0.61,
+    0.104
+   ],
+   "yaw": 180.0
+  },
+  {
+   "id": "furniture_lamp_round_floor",
+   "at": [
+    -0.897,
+    3.05,
+    4.635
+   ],
+   "yaw": 180.0
+  },
+  {
+   "id": "furniture_lamp_square_floor",
+   "at": [
+    3.032,
+    0.61,
+    -8.814
+   ]
   }
  ],
  "lights": [
@@ -12239,7 +12120,7 @@
      0.051,
      0.61
     ],
-    "yaw": -27.428
+    "yaw": -27.11
    },
    {
     "at": [
@@ -12247,7 +12128,7 @@
      0.051,
      -3.658
     ],
-    "yaw": -83.409
+    "yaw": -96.921
    },
    {
     "at": [
@@ -12255,7 +12136,7 @@
      0.66,
      3.658
     ],
-    "yaw": -12.96
+    "yaw": -11.574
    },
    {
     "at": [
@@ -12263,7 +12144,7 @@
      0.66,
      7.425
     ],
-    "yaw": -5.714
+    "yaw": -4.419
    },
    {
     "at": [
@@ -12271,7 +12152,7 @@
      0.66,
      -2.438
     ],
-    "yaw": 74.999
+    "yaw": 80.611
    },
    {
     "at": [
@@ -12279,7 +12160,7 @@
      0.66,
      -6.096
     ],
-    "yaw": 109.316
+    "yaw": 112.534
    },
    {
     "at": [
@@ -12287,15 +12168,15 @@
      0.66,
      -11.228
     ],
-    "yaw": -141.837
+    "yaw": -145.043
    },
    {
     "at": [
-     2.767,
+     4.267,
      3.098,
      -6.096
     ],
-    "yaw": 109.316
+    "yaw": 112.534
    },
    {
     "at": [
@@ -12303,7 +12184,7 @@
      3.098,
      -2.438
     ],
-    "yaw": 74.999
+    "yaw": 80.611
    },
    {
     "at": [
@@ -12311,7 +12192,7 @@
      3.098,
      3.158
     ],
-    "yaw": -13.84
+    "yaw": -12.429
    },
    {
     "at": [
@@ -12319,7 +12200,7 @@
      3.098,
      -0.836
     ],
-    "yaw": -22.738
+    "yaw": -20.926
    },
    {
     "at": [
@@ -12327,104 +12208,126 @@
      3.098,
      -4.877
     ],
-    "yaw": 110.585
+    "yaw": 117.512
    },
    {
     "at": [
-     -14.194,
+     -16.499,
      0.05,
-     -17.584
+     -15.584
     ],
-    "yaw": -138.027
+    "yaw": -130.436
    },
    {
     "at": [
-     18.306,
+     18.001,
      0.05,
      -11.084
     ],
-    "yaw": 109.486
+    "yaw": 110.795
    },
    {
     "at": [
-     1.806,
-     -2.388,
-     2.416
-    ],
-    "yaw": 30.363
-   },
-   {
-    "at": [
-     12.306,
+     13.501,
      0.05,
      12.916
     ],
-    "yaw": 40.163
+    "yaw": 43.905
    },
    {
     "at": [
-     -20.694,
-     0.05,
-     12.916
-    ],
-    "yaw": -48.11
-   },
-   {
-    "at": [
-     -1.194,
+     0.001,
      -2.388,
-     -5.084
+     0.916
     ],
-    "yaw": 148.114
+    "yaw": 27.09
    },
    {
     "at": [
-     -1.194,
-     0.66,
-     -5.084
-    ],
-    "yaw": 148.114
-   },
-   {
-    "at": [
-     -1.194,
-     -2.388,
-     -0.584
-    ],
-    "yaw": 12.106
-   },
-   {
-    "at": [
-     3.306,
+     3.001,
      0.05,
      -20.084
     ],
-    "yaw": 162.099
+    "yaw": 162.644
    },
    {
     "at": [
-     -20.694,
-     0.05,
+     -2.999,
+     -2.388,
+     -6.584
+    ],
+    "yaw": -166.062
+   },
+   {
+    "at": [
+     -2.999,
+     0.66,
+     -8.084
+    ],
+    "yaw": -170.432
+   },
+   {
+    "at": [
+     1.501,
+     -2.388,
      -3.584
     ],
-    "yaw": -88.944
+    "yaw": 92.71
    },
    {
     "at": [
-     9.306,
+     -19.499,
      0.05,
-     -2.084
+     8.416
     ],
-    "yaw": 80.654
+    "yaw": -55.63
    },
    {
     "at": [
-     -1.194,
+     10.501,
+     0.05,
+     -0.584
+    ],
+    "yaw": 77.474
+   },
+   {
+    "at": [
+     -7.499,
      0.05,
      12.916
     ],
-    "yaw": 2.44
+    "yaw": -17.949
+   },
+   {
+    "at": [
+     -19.499,
+     0.05,
+     -3.584
+    ],
+    "yaw": -90.582
    }
+  ]
+ },
+ "terrain": {
+  "format": 1,
+  "origin": [
+   -28.0,
+   -27.0
+  ],
+  "cell": 1.0,
+  "size": [
+   48,
+   46
+  ],
+  "base": -2.5137,
+  "step": 0.05,
+  "bytes": 2114,
+  "data": "eNqtVctNBDEMtTM7sMCJCvZCARSABBIFcKEN+uDGhUI4c9kKEBUgWlgOwCBmxiRxPnays9rVEilOJnH8ffYQTY/lx8L0D013CXb0gnb/SleV/PV0tZFuadvCkqfunTaNR9hv4ATN636DCCvK0t2KBe/+eqLlLB0LjqiBV/01FRuWjGnNukzxciQ33XBr3MkJRWwx2GgsNdBbiYOS6nZLerFnLcwsh7FnAw30Q6/kXtzDHLQVRM90A+dw6CVHP93u1NvXVP4ewYHVPJLOQwsn8EWa08lpvIf61NgzrHIZI1bGFKF8D96vOqNmh+ybSUzsiqFtxi1c+JyVr4/hm2qPuVKZX7/p7ZtZqgYZkZ6aNfzg8YGVfKbG58aEGKPAuctbY9eRcpUbYHzKSuyFdIkfjnCbrCLCgDue6LFpoKN5sst4Prbjl1rPxVjPelFFHRWeQNQzhmrTeWZpo+onqFCao+p4nf1cpVEnwrXF+ZW/oXAX+e+SNSb4kvVo2bKTcSQQPq0GZ4ObZ8CrzBWEKLiMjraiY3caSXYaGclYYWOqVaepsfMtSUPR5TBlMX6VU3e4+EeBtIcClVE2Bkxjkm+qvpnxh2t6b/ZfRxFErLH4S0gsyhvpNypNpR8If1cq97g=",
+  "mat": "grass",
+  "tint": [
+   0.85,
+   0.9,
+   0.78
   ]
  }
 }
