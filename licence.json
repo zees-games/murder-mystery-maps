@@ -1,0 +1,66 @@
+[
+  {
+    "paths": [
+      ""
+    ],
+    "licence": "MIT",
+    "author": "TMC",
+    "url": "https://github.com/zees-games/murder-mystery-maps",
+    "title": "murder-mystery-maps (original content)"
+  },
+  {
+    "paths": [
+      "maps/mm_factory_winter.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Factory Winter",
+    "author": "FoKa (redesign); the original location is by Black Widow Games",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3389912671",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_greenwood_estate.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Greenwood Estate",
+    "author": "Kammorne",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=286757719",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_mu_hotel.json"
+    ],
+    "licence": "CC-BY-NC-ND-4.0",
+    "exception": "credited-community-map",
+    "title": "Hotel",
+    "author": "Neo_Wesker",
+    "source_url": "https://gamebanana.com/maps/206520",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_office_murder.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Office",
+    "author": "Kammorne",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=275775110",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_silence_hollow.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Hollow Hill",
+    "author": "Danny Judas (textures and models by the Alchemilla team and Valve, none of which is used here)",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=534296455",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  }
+]
