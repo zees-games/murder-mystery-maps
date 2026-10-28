@@ -12410,5 +12410,9 @@
    0.78
   ],
   "skirt": -4.5137
+ },
+ "ambient": {
+  "level": 1.3,
+  "lively": true
  }
 }

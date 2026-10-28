@@ -22290,5 +22290,8 @@
   ]
  },
  "ambience": "amb_outdoor",
- "ambience_indoor": "amb_indoor"
+ "ambience_indoor": "amb_indoor",
+ "ambient": {
+  "level": 0.8
+ }
 }

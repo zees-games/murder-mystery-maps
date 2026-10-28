@@ -41,3 +41,7 @@ Python only; no `heavy` needed. The game's own map check (in game-murder-mystery
 | Changing the document format | game-murder-mystery's `game/mm_map_doc.gd`, then `maps/README.md` |
 | Writing a new building | the library docstrings at the top of `tools/build_maps.py`; `mansion()` for a two-storey house, `motel()` for a single-storey layout |
 | Adding a toy | hide-n-seek-maps' `maps/README.md` toy list is the same catalogue (`TOYS` in the builder) |
+
+## Ambience level
+
+Every document carries `"ambient": {"level": n, "lively": true}` for dot-audio's `DotAmbienceDirector` (`level` multiplies the stock bed, 1.0 unchanged; `lively` lets the birdsong bed play): interiors 0.6-0.9, the factory 1.0, grounds 1.3, and `lively` only on the estate and the open yard. The table is `AMBIENT` in `tools/build_maps.py`, which writes it into built documents; `tools/build_maps.py --ambient` patches the imported ones, so a new map adds a row there.

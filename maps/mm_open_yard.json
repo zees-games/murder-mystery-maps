@@ -13506,5 +13506,9 @@
     "yaw": 117.123
    }
   ]
+ },
+ "ambient": {
+  "level": 1.3,
+  "lively": true
  }
 }
