@@ -10,7 +10,7 @@ Adapted from hide-n-seek-maps' importer (copied, not linked): one spawn group, `
 What it does, and why each choice:
 
 - The world's brushes become BOXES, because a map document has no meshes. Each brush's convex
-  hull is found (dotbsp's reader, dot-map/tools/bsp) and its bounding
+  hull is found (dotbsp's reader, dot-map-convert) and its bounding
   box is written; a brush that is NOT a box (a roof slope, a stair) is cut into slabs along its
   longer horizontal axis, each slab as tall as the brush is at the slab's middle, so a ramp
   becomes a staircase of 0.3 m risers rather than a block twice its height.
@@ -41,12 +41,12 @@ sys.path.insert(0, HERE)
 
 
 def _dotbsp_path():
-    """dot-map's tools/bsp: $DOTBSP_PATH, else the sibling checkout dot-bootstrap makes."""
-    for p in (os.environ.get("DOTBSP_PATH", ""), os.path.join(HERE, "..", "..", "dot-map", "tools", "bsp")):
+    """dot-map-convert: $DOTBSP_PATH, else the sibling checkout dot-bootstrap makes."""
+    for p in (os.environ.get("DOTBSP_PATH", ""), os.path.join(HERE, "..", "..", "dot-map-convert")):
         if p and os.path.isfile(os.path.join(p, "dotbsp", "reader.py")):
             return os.path.abspath(p)
-    sys.exit("import_bsp: dot-map's tools/bsp was not found; clone dot-map beside this "
-             "repository (dot-bootstrap does) or set DOTBSP_PATH to its tools/bsp")
+    sys.exit("import_bsp: dot-map-convert was not found; clone dot-map beside this "
+             "repository (dot-bootstrap does) or set DOTBSP_PATH to its checkout")
 
 
 sys.path.insert(1, _dotbsp_path())
@@ -77,7 +77,7 @@ NOT_DOORS = ("lockerdoor", "door_oven")   # func_door_rotating targetnames that 
 SLAB = 28.0     # source units: ~0.53 m, a slope's riser
 
 TOOLS = ("TOOLS/", "tools/")
-# The surface of a brush comes from dot-map's shared list (tools/bsp/dotbsp/source_textures.tsv), the one every
+# The surface of a brush comes from dot-map's shared list (dot-map-convert/dotbsp/source_textures.tsv), the one every
 # conversion reads; a new texture goes there, never into this file. `bsp.py unmapped <bsp>` lists what it misses.
 TEXTURE_MAP = texturemap.load()
 
