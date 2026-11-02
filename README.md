@@ -7,7 +7,7 @@ Every map is a **JSON document**, not a scene. A server reads the documents in i
 | Map | What it is |
 | --- | --- |
 | `mm_mansion` (Blackwood Mansion) | Two storeys and a cellar: an entrance hall with a staircase, a dining room with a long table, a library, a kitchen and a servants' corridor that loops back to the hall, a back stair, bedrooms and a bathroom upstairs, and a garden with a hedge and a shed |
-| `mm_motel` (Lonely Pines Motel) | Eight small rooms along a covered walkway in a U round a car park and a pool, an office, a diner with its kitchen, a laundry, a boiler room and a storage shed, and a back alley behind the rooms that joins both ends |
+| `mm_motel` (Lonely Pines Motel) | Eight small rooms along a covered walkway in a U round a car park and a pool, four more on an upper storey off a balcony with a stair at each end, an office, a diner with its kitchen, a laundry, a boiler room and a storage shed, and a back alley behind the rooms that joins both ends |
 | `mm_silence_hollow` (Hollow Hill) | A small town of narrow rooms on three levels, a flooded cellar and several ways round; converted from a community map, see below |
 | `mm_factory_winter` (Factory Winter) | A snowed-in village's meat factory: a maze of work rooms, offices and cold stores on several levels; converted from a community map, see below. The snowed village yards are in it, with 17 doors hung |
 | `mm_office_murder` (Office) | A single-storey office floor: cubicle blocks, meeting rooms, a reception end and long corridors that loop; converted from a community map, see below |

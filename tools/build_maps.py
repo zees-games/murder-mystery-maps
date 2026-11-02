@@ -1407,7 +1407,7 @@ class Frame:
 
 
 def motel_room(m, fr):
-    """One of the motel's eight rooms: a bathroom in the back corner behind a partition and a
+    """One of the motel's twelve rooms: a bathroom in the back corner behind a partition and a
     door, a single bed with its table and lamp, a desk, a television, an armchair, a doormat."""
     fr.part(0.0, 2.5, 2.3, 2.5, doors=[(1.7, 2.5, D("bathroom door", w=0.9))])
     fr.part(2.3, 0.0, 2.3, 2.5)
@@ -1427,9 +1427,10 @@ def motel_room(m, fr):
     fr.prop("furniture_trashcan", 4.5, 5.2)
 
 
-def motel_wing(m, front, x0, z0, x1, z1, n, number):
+def motel_wing(m, front, x0, z0, x1, z1, n, number, y=0.0):
     """A wing of `n` rooms facing `front`: floor, ceiling, outer and party walls, a door and a
-    window to the walkway and a window at the back of every room, and the rooms themselves."""
+    window to the walkway and a window at the back of every room, and the rooms themselves.
+    `y` is the floor's top: 0 on the ground, the upper storey's height for rooms off a balcony."""
     H = 3.0
     axis_x = front in ("s", "n")
     step = ((x1 - x0) if axis_x else (z1 - z0)) / n
@@ -1437,44 +1438,44 @@ def motel_wing(m, front, x0, z0, x1, z1, n, number):
     front_c = {"s": z1, "n": z0, "e": x1, "w": x0}[front]
     back_in = "+" if front in ("s", "e") else "-"
     front_in = "-" if back_in == "+" else "+"
-    m.floor(x0, z0, x1, z1, "carpet", (0.55, 0.42, 0.36))
-    m.ceiling(x0, z0, x1, z1, H, "ceiling", None, "roof", (0.4, 0.3, 0.28), 0.1)
+    m.floor(x0, z0, x1, z1, "carpet", (0.55, 0.42, 0.36), y=y)
+    m.ceiling(x0, z0, x1, z1, y + H, "ceiling", None, "roof", (0.4, 0.3, 0.28), 0.1)
     rooms = []
     for k in range(n):
         if axis_x:
-            fr = Frame(m, front, x0 + k * step, z0, x0 + (k + 1) * step, z1)
+            fr = Frame(m, front, x0 + k * step, z0, x0 + (k + 1) * step, z1, y)
         else:
-            fr = Frame(m, front, x0, z0 + k * step, x1, z0 + (k + 1) * step)
+            fr = Frame(m, front, x0, z0 + k * step, x1, z0 + (k + 1) * step, y)
         rooms.append(fr)
     ax = 0 if axis_x else 1
     doors = [(fr.xz(2.5, fr.V)[ax], D("room %d" % (number + k), w=1.1)) for k, fr in enumerate(rooms)]
     wins = [(fr.xz(4.0, fr.V)[ax], 1.0) for fr in rooms]
     back_wins = [(fr.xz(3.9, 0.0)[ax], 1.0) for fr in rooms] + [(fr.xz(1.0, 0.0)[ax], 0.6) for fr in rooms]
     if axis_x:
-        W(m, x0, back_c, x1, back_c, wins=back_wins, outer=True, inward=back_in, height=H)
-        W(m, x0, front_c, x1, front_c, doors=doors, wins=wins, outer=True, inward=front_in, height=H)
+        W(m, x0, back_c, x1, back_c, wins=back_wins, outer=True, inward=back_in, y0=y, height=H)
+        W(m, x0, front_c, x1, front_c, doors=doors, wins=wins, outer=True, inward=front_in, y0=y, height=H)
         for k in range(n + 1):
             p = x0 + k * step
-            W(m, p, z0, p, z1, outer=k in (0, n), inward="+" if k == 0 else "-", height=H)
+            W(m, p, z0, p, z1, outer=k in (0, n), inward="+" if k == 0 else "-", y0=y, height=H)
     else:
-        W(m, back_c, z0, back_c, z1, wins=back_wins, outer=True, inward=back_in, height=H)
-        W(m, front_c, z0, front_c, z1, doors=doors, wins=wins, outer=True, inward=front_in, height=H)
+        W(m, back_c, z0, back_c, z1, wins=back_wins, outer=True, inward=back_in, y0=y, height=H)
+        W(m, front_c, z0, front_c, z1, doors=doors, wins=wins, outer=True, inward=front_in, y0=y, height=H)
         for k in range(n + 1):
             p = z0 + k * step
-            W(m, x0, p, x1, p, outer=k in (0, n), inward="+" if k == 0 else "-", height=H)
+            W(m, x0, p, x1, p, outer=k in (0, n), inward="+" if k == 0 else "-", y0=y, height=H)
     for fr in rooms:
-        lit(m, min(fr.x0, fr.x1), min(fr.z0, fr.z1), max(fr.x0, fr.x1), max(fr.z0, fr.z1), H, 0.85)
+        lit(m, min(fr.x0, fr.x1), min(fr.z0, fr.z1), max(fr.x0, fr.x1), max(fr.z0, fr.z1), y + H, 0.85)
         motel_room(m, fr)
     return rooms
 
 
-def post_row(m, x0, z0, x1, z1, step, top=2.8):
-    """Posts along a covered walkway's open edge."""
+def post_row(m, x0, z0, x1, z1, step, top=2.8, y=0.0):
+    """Posts along a covered walkway's open edge, standing on a floor at `y`."""
     n = max(1, int(round(max(abs(x1 - x0), abs(z1 - z0)) / step)))
     for i in range(n + 1):
         px = x0 + (x1 - x0) * i / n
         pz = z0 + (z1 - z0) * i / n
-        m.span(px - 0.1, px + 0.1, 0.0, top, pz - 0.1, pz + 0.1, "wood", (0.45, 0.35, 0.28))
+        m.span(px - 0.1, px + 0.1, y, y + top, pz - 0.1, pz + 0.1, "wood", (0.45, 0.35, 0.28))
 
 
 def lamp_pole(m, x, z, height=4.5, energy=1.0):
@@ -1484,7 +1485,8 @@ def lamp_pole(m, x, z, height=4.5, energy=1.0):
 
 
 def motel():
-    """Lonely Pines Motel: eight rooms in a U of covered walkway round a car park and a pool, an
+    """Lonely Pines Motel: eight rooms in a U of covered walkway round a car park and a pool, four
+    more upstairs off a balcony over the back walkway with a stair at each end, an
     office and a diner on the road side, a laundry and a boiler room at the corners of the
     walkway, a storage shed, and a back alley that runs behind the rooms and round both ends.
 
@@ -1543,6 +1545,39 @@ def motel():
     for z in (-4.0,):
         m.light(-13.0, 2.4, z, rng=7.0, energy=0.8, colour=WARM)
         m.light(13.0, 2.4, z, rng=7.0, energy=0.8, colour=WARM)
+
+    # --- The upper storey: four more rooms over the north wing, off a balcony with a stair at
+    # each end, so the balcony is a loop through the car park and never a dead end. ---
+    UP = 3.55                          # on the north wing's roof (its top is 3.35)
+    upper = motel_wing(m, "s", -10, -16, 10, -10, 4, 9, y=UP)
+    balc = (0.4, 0.38, 0.36)
+    # The balcony over the walkway (whose roof tops out at 3.15) and a landing at each end, on the
+    # west and east walkways' roofs, where the stairs arrive.
+    m.floor(-14, -10, 14, -8, "concrete", (0.8, 0.78, 0.74), y=UP, thick=0.4)
+    m.floor(-14, -8, -12, -6.4, "concrete", (0.8, 0.78, 0.74), y=UP, thick=0.4)
+    m.floor(12, -8, 14, -6.4, "concrete", (0.8, 0.78, 0.74), y=UP, thick=0.4)
+    m.ceiling(-14, -10, 14, -8, UP + 2.8, "ceiling", None, "roof", (0.4, 0.3, 0.28), 0.1)
+    post_row(m, -12.0, -8.1, 12.0, -8.1, 4.0, y=UP)
+    # Two straight flights along the walkway's edge, clear of its eaves (z -7.9) and the pool fence.
+    flight(m, -12.0, -7.0, -7.8, -6.4, 0.0, UP, "w", "concrete", balc)
+    flight(m, 7.0, 12.0, -7.8, -6.4, 0.0, UP, "e", "concrete", balc)
+    # Rails: the balcony's open edge, the landings, and the laundry's and boiler room's roofs
+    # behind it (a step down that nobody should walk out on).
+    railing(m, -12.0, -8.0, 12.0, -8.0, UP)
+    railing(m, -12.0, -8.0, -12.0, -7.8, UP)
+    railing(m, 12.0, -8.0, 12.0, -7.8, UP)
+    railing(m, -14.0, -6.4, -12.0, -6.4, UP)
+    railing(m, 12.0, -6.4, 14.0, -6.4, UP)
+    railing(m, -14.0, -10.0, -14.0, -6.4, UP)
+    railing(m, 14.0, -10.0, 14.0, -6.4, UP)
+    railing(m, -14.0, -10.0, -10.0, -10.0, UP)
+    railing(m, 10.0, -10.0, 14.0, -10.0, UP)
+    for x in (-12.0, -6.0, 0.0, 6.0, 12.0):
+        m.lamp_panel(x, -9.0, UP + 2.8)
+        m.light(x, UP + 2.4, -9.0, rng=8.0, energy=0.85, colour=WARM)
+    m.prop("furniture_potted_plant", -13.4, -9.4, y=UP)
+    m.prop("furniture_bench", 13.0, -9.3, 180.0, y=UP)
+    m.prop("furniture_trashcan", 13.5, -7.0, y=UP)
 
     # --- Laundry (west corner) and the boiler room (east corner) ---
     for (x0, x1, west, tag) in ((-14.0, -10.0, True, "laundry"), (10.0, 14.0, False, "boiler room")):
@@ -1641,7 +1676,7 @@ def motel():
 
     # --- The road side and the alley ---
     # Cars in the car park and the driveway, and a van-sized wreck in the alley.
-    for x, z, tint in ((-10.0, -4.5, (0.7, 0.2, 0.2)), (-10.0, 2.5, (0.25, 0.35, 0.6)), (-4.0, -5.5, (0.85, 0.8, 0.7)),
+    for x, z, tint in ((-10.0, -3.9, (0.7, 0.2, 0.2)), (-10.0, 2.5, (0.25, 0.35, 0.6)), (-4.0, -5.5, (0.85, 0.8, 0.7)),
                        (-4.0, 4.5, (0.2, 0.2, 0.22)), (-6.0, 14.0, (0.35, 0.5, 0.35))):
         car(m, x, z, "z", tint)
     car(m, 4.0, -18.0, "x", (0.5, 0.45, 0.35))
@@ -1672,6 +1707,10 @@ def motel():
     for fr in rooms_all:
         x, z = fr.xz(3.0, 4.7)
         m.spawn(x, z)
+    for fr in upper:
+        x, z = fr.xz(3.0, 4.7)
+        m.spawn(x, z, y=UP + 0.05)
+    m.spawn(0.0, -9.0, y=UP + 0.05)
     for x, z in ((-14.0, 11.5), (6.0, 11.0), (17.0, 11.0), (-12.0, -13.0), (12.0, -13.0), (-17.0, -13.2),
                  (-8.0, 0.0), (-3.0, 12.0), (-22.5, 6.0), (22.5, -6.0), (0.0, -18.0), (15.0, -18.0), (-15.0, -18.0)):
         m.spawn(x, z)
