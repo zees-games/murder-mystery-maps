@@ -1,0 +1,15 @@
+{
+	"format": 1,
+	"mirrors": [],
+	"origin": "https://dotgames.org/content",
+	"packs": [
+		{
+			"id": "gamemann/murder-mystery-maps",
+			"into": "",
+			"kind": "pack",
+			"manifest_sha256": "3d045624c3e9bcdcdb14c9c00187a2b648676207c897aa73146c157a9a725d42",
+			"optional": false,
+			"version": "1.0.0"
+		}
+	]
+}
