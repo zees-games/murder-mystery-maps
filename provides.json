@@ -38,6 +38,13 @@
         },
         {
             "kind": "map",
+            "id": "mm_mountainresort",
+            "name": "Mountain Resort",
+            "scene": "maps/mm_mountainresort.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
             "id": "mm_mu_hotel",
             "name": "Hotel",
             "scene": "maps/mm_mu_hotel.json",
