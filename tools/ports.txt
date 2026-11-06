@@ -1,0 +1,1 @@
+functionalist_night	3382694345	gm_funkis_night.bsp	--dusk --widen-doors --hang-doorways --dress=60 --dress-walls=80 --spread-spawns=24 --max-lights=100 --prune-pockets --terrain --ambience=amb_wind,amb_indoor --merge-boxes --min-box-volume=0.02 --one-way=12.344,-79.019	
