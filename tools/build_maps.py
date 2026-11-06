@@ -2036,12 +2036,13 @@ MAPS = {"mm_mansion": mansion, "mm_motel": motel, "mm_open_yard": open_yard}
 # Maps converted from community levels by tools/import_bsp.py (the command is in each map's README entry).
 # They are written once by the importer and kept, so the builder neither rewrites nor compares them;
 # --check only requires that each exists.
-IMPORTED = ["mm_silence_hollow", "mm_factory_winter", "mm_office_murder", "mm_greenwood_estate", "mm_mu_hotel"]
+IMPORTED = ["mm_silence_hollow", "mm_factory_winter", "mm_office_murder", "mm_greenwood_estate", "mm_mu_hotel", "mm_deco_mansion"]
 
 # Each map's `ambient` block for DotAmbienceDirector: bed level (1.0 is the stock 0.35 bed) and whether
 # the birdsong bed may play. Interiors sit under 1, open ground over; only parks, woods and gardens
 # are lively. Maps that arrive from tools/import_bsp.py are patched by `--ambient`.
 AMBIENT = {
+    "mm_deco_mansion": (0.9, False),
     "mm_factory_winter": (1.0, False),
     "mm_greenwood_estate": (1.3, True),
     "mm_mansion": (0.7, False),
