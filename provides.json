@@ -10,9 +10,23 @@
     "entries": [
         {
             "kind": "map",
+            "id": "functionalist_night",
+            "name": "Functionalist Night",
+            "scene": "maps/functionalist_night.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
             "id": "gm_villa",
             "name": "Villa",
             "scene": "maps/gm_villa.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_deco_mansion",
+            "name": "Deco Mansion",
+            "scene": "maps/mm_deco_mansion.json",
             "map_kind": "murder"
         },
         {
