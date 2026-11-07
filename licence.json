@@ -62,5 +62,16 @@
     "author": "Danny Judas (textures and models by the Alchemilla team and Valve, none of which is used here)",
     "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=534296455",
     "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/gm_villa.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Villa",
+    "author": "korka007",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2633639653",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
   }
 ]
