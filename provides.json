@@ -52,6 +52,13 @@
         },
         {
             "kind": "map",
+            "id": "mm_murder_mansion",
+            "name": "Murder Mansion",
+            "scene": "maps/mm_murder_mansion.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
             "id": "mm_office_murder",
             "name": "Office",
             "scene": "maps/mm_office_murder.json",

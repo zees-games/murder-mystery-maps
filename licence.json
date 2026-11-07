@@ -43,6 +43,17 @@
   },
   {
     "paths": [
+      "maps/mm_murder_mansion.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Murder Mansion",
+    "author": "Grimm",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=481179223",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
       "maps/mm_office_murder.json"
     ],
     "licence": "none stated",
