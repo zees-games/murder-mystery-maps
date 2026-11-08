@@ -24,6 +24,13 @@
         },
         {
             "kind": "map",
+            "id": "mm_airbus",
+            "name": "Airbus",
+            "scene": "maps/mm_airbus.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
             "id": "mm_deco_mansion",
             "name": "Deco Mansion",
             "scene": "maps/mm_deco_mansion.json",
@@ -94,9 +101,23 @@
         },
         {
             "kind": "map",
+            "id": "mm_rooftops_2016",
+            "name": "Rooftops 2016",
+            "scene": "maps/mm_rooftops_2016.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
             "id": "mm_silence_hollow",
             "name": "Hollow Hill",
             "scene": "maps/mm_silence_hollow.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_warehouse",
+            "name": "Warehouse",
+            "scene": "maps/mm_warehouse.json",
             "map_kind": "murder"
         },
         {
