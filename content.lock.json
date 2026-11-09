@@ -8,6 +8,9 @@
 			"into": "",
 			"kind": "pack",
 			"manifest_sha256": "3d045624c3e9bcdcdb14c9c00187a2b648676207c897aa73146c157a9a725d42",
+			"manifest_sha256_by_origin": {
+				"https://dev.dotgames.org/content": "50321536219f3bc051c70abfdd53451643591922cc5624d20f90f78743ac254e"
+			},
 			"optional": false,
 			"version": "1.0.0"
 		}
