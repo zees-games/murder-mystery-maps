@@ -2,7 +2,7 @@
 
     python3 tools/add_cover.py maps/sunken_resort.json [--count=16]
 
-The importer's own --cover needs the source .bsp; this works on the kept document, so it can run again after trim_wire.py. A place is
+The importer's own --cover needs the source .bsp; this works on the kept document, so it can run again after an import. A place is
 taken when a floor box lies under it, no box or prop crosses the footprint above the floor, and it is 1.6 m from any door and spawn.
 """
 import json
