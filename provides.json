@@ -10,16 +10,16 @@
     "entries": [
         {
             "kind": "map",
-            "id": "functionalist_night",
+            "id": "mm_functionalist_night",
             "name": "Functionalist Night",
-            "scene": "maps/functionalist_night.json",
+            "scene": "maps/mm_functionalist_night.json",
             "map_kind": "murder"
         },
         {
             "kind": "map",
-            "id": "gm_villa",
+            "id": "mm_villa",
             "name": "Villa",
-            "scene": "maps/gm_villa.json",
+            "scene": "maps/mm_villa.json",
             "map_kind": "murder"
         },
         {
@@ -122,9 +122,9 @@
         },
         {
             "kind": "map",
-            "id": "sunken_resort",
+            "id": "mm_sunken_resort",
             "name": "Sunken Resort",
-            "scene": "maps/sunken_resort.json",
+            "scene": "maps/mm_sunken_resort.json",
             "map_kind": "murder"
         }
     ]

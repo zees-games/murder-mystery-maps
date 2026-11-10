@@ -76,7 +76,7 @@
   },
   {
     "paths": [
-      "maps/gm_villa.json"
+      "maps/mm_villa.json"
     ],
     "licence": "none stated",
     "exception": "credited-community-map",
@@ -87,7 +87,7 @@
   },
   {
     "paths": [
-      "maps/functionalist_night.json"
+      "maps/mm_functionalist_night.json"
     ],
     "licence": "none stated",
     "exception": "credited-community-map",

@@ -1,6 +1,6 @@
 """Stand crouch-height cover (sofas, cabinets, beds) on clear floor near an imported map's spawns, after import_bsp.py.
 
-    python3 tools/add_cover.py maps/sunken_resort.json [--count=16]
+    python3 tools/add_cover.py maps/mm_sunken_resort.json [--count=16]
 
 The importer's own --cover needs the source .bsp; this works on the kept document, so it can run again after an import. A place is
 taken when a floor box lies under it, no box or prop crosses the footprint above the floor, and it is 1.6 m from any door and spawn.
