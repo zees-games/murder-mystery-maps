@@ -10,20 +10,6 @@
     "entries": [
         {
             "kind": "map",
-            "id": "mm_functionalist_night",
-            "name": "Functionalist Night",
-            "scene": "maps/mm_functionalist_night.json",
-            "map_kind": "murder"
-        },
-        {
-            "kind": "map",
-            "id": "mm_villa",
-            "name": "Villa",
-            "scene": "maps/mm_villa.json",
-            "map_kind": "murder"
-        },
-        {
-            "kind": "map",
             "id": "mm_airbus",
             "name": "Airbus",
             "scene": "maps/mm_airbus.json",
@@ -41,6 +27,13 @@
             "id": "mm_factory_winter",
             "name": "Factory Winter",
             "scene": "maps/mm_factory_winter.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_functionalist_night",
+            "name": "Functionalist Night",
+            "scene": "maps/mm_functionalist_night.json",
             "map_kind": "murder"
         },
         {
@@ -115,16 +108,23 @@
         },
         {
             "kind": "map",
-            "id": "mm_warehouse",
-            "name": "Warehouse",
-            "scene": "maps/mm_warehouse.json",
+            "id": "mm_sunken_resort",
+            "name": "Sunken Resort",
+            "scene": "maps/mm_sunken_resort.json",
             "map_kind": "murder"
         },
         {
             "kind": "map",
-            "id": "mm_sunken_resort",
-            "name": "Sunken Resort",
-            "scene": "maps/mm_sunken_resort.json",
+            "id": "mm_villa",
+            "name": "Villa",
+            "scene": "maps/mm_villa.json",
+            "map_kind": "murder"
+        },
+        {
+            "kind": "map",
+            "id": "mm_warehouse",
+            "name": "Warehouse",
+            "scene": "maps/mm_warehouse.json",
             "map_kind": "murder"
         }
     ]
