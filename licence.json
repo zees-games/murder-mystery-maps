@@ -106,5 +106,60 @@
     "author": "prvec (Steam Workshop)",
     "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2312309380",
     "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_airbus.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Airbus",
+    "author": "Officer_B (uploaded by Zaratusa; Steam Workshop)",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=253297309",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_deco_mansion.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Deco Mansion",
+    "author": "Gastly_Furby_777 (Steam Workshop)",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3698815153",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_rooftops_2016.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Rooftops 2016",
+    "author": "youmenow1 (Steam Workshop)",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=534491717",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_sunken_resort.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Sunken Resort",
+    "author": "Praisemantas (Steam Workshop)",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3376822715",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/mm_warehouse.json"
+    ],
+    "licence": "none stated",
+    "exception": "credited-community-map",
+    "title": "Warehouse",
+    "author": "Max Power (Steam Workshop)",
+    "source_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=177889282",
+    "removal_contact": "https://github.com/zees-games/murder-mystery-maps/issues"
   }
 ]
