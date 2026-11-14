@@ -1,5 +1,3 @@
-# murder-mystery-maps
-
 The maps for game-murder-mystery, a social deduction game: everybody starts apart, one player is the murderer with a knife, one is the bystander with a gun, and the rest work out which is which. Three maps of our own and 14 converted from community maps.
 
 A map is a JSON document, not a scene. The server reads every `.json` file in its map directory and sends the current map to each client, so players need no map files. To add a map, drop one file in the directory. The format is in [maps/README.md](maps/README.md).
