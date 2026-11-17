@@ -1331,7 +1331,7 @@ def mansion():
     ground = [(-14.0, 8.4, "dining room"), (-11.0, 1.0, "dining room"), (-11.0, -9.0, "kitchen"), (0.0, 7.0, "hall"),
               (-2.5, 0.5, "hall"), (-3.0, -8.0, "library"), (3.5, -9.5, "library"), (11.0, -8.5, "study"),
               (17.5, -8.5, "back stair"), (12.5, 6.5, "lounge"), (17.0, 1.5, "lounge"), (-15.5, -9.0, "cellar"),
-              (-22.5, 2.0, "west garden"), (0.0, 15.0, "front lawn"), (22.5, -10.0, "east garden"), (11.0, -17.3, "garden shed")]
+              (-22.5, 2.0, "west garden"), (0.0, 15.0, "front lawn"), (22.5, -10.0, "east garden"), (11.5, -13.4, "shed yard")]
     for x, z, room in ground:
         m.spawn(x, z, y=(-3.0 + 0.05) if room == "cellar" else 0.05)
     for x, z in ((-2.0, -8.0), (5.5, -7.5), (11.0, -8.5), (-14.0, -8.0), (-12.0, 6.0), (-2.0, 1.0), (10.0, 4.0), (17.0, 3.0), (17.5, -8.5)):
