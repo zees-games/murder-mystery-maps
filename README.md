@@ -51,6 +51,10 @@ Ground that is a displacement in the source map becomes a `terrain` heightfield.
 
 Some maps were renamed (`mm_villa`, `mm_functionalist_night`, `mm_sunken_resort`) because the hide-n-seek pack uses the same base ids and the catalogue refuses a second map with an id.
 
+## Quality and ongoing improvement
+
+The maps, models, textures and sounds in this pack are being improved over time, and some of them are low quality today. Improvement is driven by the Nightly queue, a work queue where agents pick up items, and by a visual judge loop that views rendered frames and files defects until each asset passes repeated clean reviews. Known defects are filed there and fixed in later releases, and the screenshots here are regenerated as the assets improve.
+
 ## Licence
 
 MIT, see [LICENSE](LICENSE). The converted maps keep the licences listed above.
